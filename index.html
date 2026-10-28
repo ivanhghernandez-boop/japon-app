@@ -302,9 +302,8 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--line)}
 .sos .acts{margin:0}
 .sos .go{border-color:color-mix(in srgb,var(--alert) 40%,transparent);background:var(--surface)}
 .tel{margin-top:7px}
-.tel a,.tel span{display:inline-block;font-family:var(--mincho);font-size:30px;font-weight:400;
-  color:var(--alert);user-select:all;letter-spacing:.01em;text-decoration:none;line-height:1.2}
-.tel a{border-bottom:1px solid color-mix(in srgb,var(--alert) 35%,transparent)}
+.tel span{display:inline-block;font-family:var(--mincho);font-size:30px;font-weight:400;
+  color:var(--alert);user-select:all;letter-spacing:.01em;line-height:1.2}
 .prob{border-top:1px solid var(--line);overflow:hidden}
 .prob>summary{padding:17px 0;font-weight:500;font-size:16px;cursor:pointer;list-style:none;
   display:flex;align-items:center;gap:12px}
@@ -756,7 +755,7 @@ function vAyuda(){
     <h2 class="sec">Números de emergencia</h2><div class="items">`;
   D.EM.forEach(e=>{
     h+=`<div class="item"><div class="t">${esc(e.t)}</div>
-      <div class="tel"><a href="tel:${esc(e.n).replace(/[^+0-9]/g,"")}">${esc(e.n)}</a></div>
+      <div class="tel"><span>${esc(e.n)}</span></div>
       <div class="x">${esc(e.x)}</div>`;
     if(e.k)h+=`<div class="x" style="font-size:17px;color:var(--fg);font-weight:500;margin-top:8px">${esc(e.k)}</div>`;
     h+=`</div>`;
