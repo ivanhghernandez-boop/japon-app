@@ -6,8 +6,8 @@
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
-  "background_color": "#F4F1EB",
-  "theme_color": "#F4F1EB",
+  "background_color": "#0D131C",
+  "theme_color": "#0D131C",
   "description": "Itinerario del viaje a Japón, 10 al 19 de diciembre de 2026",
   "icons": [
     {
