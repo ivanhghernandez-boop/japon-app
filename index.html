@@ -43,7 +43,7 @@ body{background:var(--bg);color:var(--fg);font-family:var(--sans);margin:0;
   font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);
   z-index:40;background:var(--panel)}
-.wrap{max-width:860px;margin:0 auto;
+.wrap{max-width:900px;margin:0 auto;
   padding-left:max(16px,env(safe-area-inset-left,0px));
   padding-right:max(16px,env(safe-area-inset-right,0px))}
 h1,h2,h3{text-wrap:balance;margin:0}
@@ -54,15 +54,15 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 /* ---------- header */
 header{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--panel);
   border-bottom:1px solid var(--line)}
-.hrow{display:flex;align-items:center;gap:12px;padding-block:10px}
-.brand{font-weight:900;font-size:16px;letter-spacing:.17em;white-space:nowrap;
+.hdr{display:flex;flex-wrap:wrap;align-items:center;gap:0 20px;padding-block:9px}
+.brand{order:1;font-weight:900;font-size:16px;letter-spacing:.17em;white-space:nowrap;
   display:flex;align-items:center;gap:9px}
 .brand i{width:11px;height:11px;border-radius:50%;background:var(--acc);flex:0 0 auto}
-.clocks{margin-left:auto;display:flex;gap:14px;font-family:var(--mono);font-size:11px;
+.clocks{order:2;margin-left:auto;display:flex;gap:14px;font-family:var(--mono);font-size:11px;
   font-variant-numeric:tabular-nums;color:var(--fg2);text-align:right}
 .clocks b{display:block;font-size:14px;font-weight:600;color:var(--fg);letter-spacing:-.02em}
 .clocks i{font-style:normal;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg3)}
-nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;padding-bottom:7px}
+nav{order:3;flex:1 0 100%;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;padding-bottom:7px}
 nav::-webkit-scrollbar{display:none}
 nav button{padding:6px 12px;border-radius:99px;font-size:13px;font-weight:700;color:var(--fg3);
   white-space:nowrap}
@@ -84,7 +84,7 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--line)}
 .hero .big{font-family:var(--mono);font-size:clamp(34px,11vw,52px);font-weight:600;
   letter-spacing:-.04em;line-height:1.05;margin:6px 0 2px;font-variant-numeric:tabular-nums}
 .hero .sub{color:var(--fg2);font-size:14px}
-.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));gap:12px}
 .tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
 .tile .k{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg3);font-weight:700}
 .tile .v{font-weight:700;font-size:15px;margin-top:3px}
@@ -98,8 +98,8 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--line)}
 .dbtn{flex:0 0 auto;width:60px;padding:8px 0;border-radius:10px;background:var(--panel);
   border:1px solid var(--line);text-align:center;transition:transform .12s}
 .dbtn:hover{transform:translateY(-1px)}
-.dbtn .n{font-family:var(--mono);font-size:19px;font-weight:600;line-height:1}
-.dbtn .d{font-size:10px;color:var(--fg3);margin-top:3px;letter-spacing:.04em}
+.dbtn .n{display:block;font-family:var(--mono);font-size:19px;font-weight:600;line-height:1}
+.dbtn .d{display:block;font-size:10px;color:var(--fg3);margin-top:3px;letter-spacing:.04em}
 .dbtn[aria-current="true"]{background:var(--c);border-color:var(--c);color:#fff}
 .dbtn[aria-current="true"] .d{color:rgba(255,255,255,.85)}
 .dhead{border-left:4px solid var(--c);padding-left:14px;margin:18px 0 20px}
@@ -123,7 +123,7 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--line)}
 .stop.key .card{box-shadow:var(--shadow)}
 .stop.plain .card{background:transparent;border-style:dashed}
 .card .t{font-weight:700;font-size:16px;letter-spacing:-.01em;line-height:1.3}
-.card .x{color:var(--fg2);font-size:14px;margin-top:6px}
+.card .x{color:var(--fg2);font-size:14px;margin-top:6px;max-width:66ch}
 .badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
 .b{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
   padding:3px 8px;border-radius:99px;background:var(--panel2);color:var(--fg2)}
@@ -146,7 +146,7 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--line)}
 .items{display:flex;flex-direction:column;gap:10px}
 .item{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
 .item .t{font-weight:700;font-size:15px}
-.item .x{color:var(--fg2);font-size:14px;margin-top:5px}
+.item .x{color:var(--fg2);font-size:14px;margin-top:5px;max-width:70ch}
 .item ul{margin:8px 0 0;padding-left:18px;color:var(--fg2);font-size:13.5px}
 .item li{margin-bottom:5px}
 .item.rec{border-color:var(--ok)}
@@ -174,23 +174,66 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--line)}
 .fl .times .r{text-align:right}
 footer{border-top:1px solid var(--line);margin-top:34px;padding-block:18px 8px;
   color:var(--fg3);font-size:12px}
+/* teléfono angosto */
 @media(max-width:430px){
   .rail{padding-left:72px}
   .rail::before{left:57px}
   .stop .time{left:-72px;width:44px;font-size:12px}
   .stop .dot{left:-23px}
   .clocks{gap:10px}
+  .brand{font-size:14.5px;letter-spacing:.14em}
+  .hero .big{letter-spacing:-.045em}
+}
+@media(max-width:360px){
+  .rail{padding-left:64px}
+  .rail::before{left:50px}
+  .stop .time{left:-64px;width:40px;font-size:11px}
+  .stop .dot{left:-22px}
+  nav button{padding:6px 9px;font-size:12.5px}
+}
+/* tablet: encabezado en una fila y más aire */
+@media(min-width:760px){
+  body{font-size:15.5px}
+  .hdr{padding-block:11px;gap:0 26px}
+  nav{order:2;flex:1 1 auto;padding-bottom:0}
+  .clocks{order:3}
+  main{padding-block:26px 64px}
+  .lede{font-size:15px}
+  .card{padding:16px 18px}
+  .dbtn{width:66px}
+  .rail{padding-left:96px}
+  .rail::before{left:78px}
+  .stop .time{left:-96px;width:60px;font-size:14px}
+  .stop .dot{left:-26px}
+  .hero{padding:24px}
+}
+/* escritorio: días en barra lateral fija */
+@media(min-width:1000px){
+  .wrap{max-width:1180px}
+  .dayswrap{display:grid;grid-template-columns:216px minmax(0,1fr);gap:0 34px;align-items:start}
+  .days{flex-direction:column;overflow:visible;gap:5px;padding-bottom:0;
+    position:sticky;top:calc(env(safe-area-inset-top,0px) + 74px)}
+  .dbtn{width:100%;display:flex;align-items:baseline;gap:11px;text-align:left;padding:9px 13px}
+  .dbtn .n{font-size:17px;width:20px;flex:0 0 auto}
+  .dbtn .d{margin-top:0;font-size:12px}
+  .dhead{margin-top:0}
+  .stop{margin-bottom:16px}
+  .glos{grid-template-columns:repeat(3,1fr)}
+  .fl{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:14px}
+  .hero .big{font-size:48px}
+}
+@media(min-width:1320px){
+  .wrap{max-width:1280px}
+  .dayswrap{grid-template-columns:234px minmax(0,1fr);gap:0 42px}
 }
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 
-<header><div class="wrap">
-  <div class="hrow">
-    <div class="brand"><i></i>JAPÓN</div>
-    <div class="clocks">
-      <div><i>México</i><b class="mono" id="cmx">--:--</b></div>
-      <div><i>Japón</i><b class="mono" id="cjp">--:--</b></div>
-    </div>
+<header><div class="wrap hdr">
+  <div class="brand"><i></i>JAPÓN</div>
+  <div class="clocks">
+    <div><i>México</i><b class="mono" id="cmx">--:--</b></div>
+    <div><i>Japón</i><b class="mono" id="cjp">--:--</b></div>
   </div>
   <nav id="nav"></nav>
 </div></header>
@@ -286,10 +329,11 @@ function vAhora(){
 let diaSel=1;
 function vDias(){
   let h=`<p class="lede">Los horarios son rangos flexibles, no citas. Cada parada trae un botón
-    que abre Google Maps con la ruta desde la parada anterior, en transporte público.</p><div class="days">`;
+    que abre Google Maps con la ruta desde la parada anterior, en transporte público.</p>
+    <div class="dayswrap"><div class="days">`;
   D.D.forEach(d=>{h+=`<button class="dbtn" data-dia="${d.n}" style="--c:${CC[d.ciudad]}"
     aria-current="${d.n===diaSel}"><span class="n">${d.n}</span><span class="d">${esc(d.f.split(" ")[1])} dic</span></button>`;});
-  h+=`</div><div id="dcont"></div>`;
+  h+=`</div><div id="dcont"></div></div>`;
   return h;
 }
 function renderDia(){
