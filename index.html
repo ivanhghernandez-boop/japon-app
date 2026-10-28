@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="manifest" href="manifest.json">
 <title>Japón</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -531,5 +532,19 @@ setInterval(()=>{if(actual==="ahora"||actual==="reservas")ir(actual,false);},600
 ir(location.hash?location.hash.slice(1):"ahora",false);
 </script>
 
+<script>
+if("serviceWorker" in navigator){
+  addEventListener("load",()=>{
+    navigator.serviceWorker.register("sw.js").then(r=>{
+      r.addEventListener("updatefound",()=>{
+        const w=r.installing;
+        w&&w.addEventListener("statechange",()=>{
+          if(w.state==="installed"&&navigator.serviceWorker.controller)location.reload();
+        });
+      });
+    }).catch(()=>{});
+  });
+}
+</script>
 </body>
 </html>
