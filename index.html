@@ -270,14 +270,14 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--line)}
 .nx em.warn{color:var(--alert);border-color:color-mix(in srgb,var(--alert) 45%,transparent)}
 .nx i{flex:0 0 auto;width:7px;height:7px;border-right:1.4px solid var(--fg3);
   border-bottom:1.4px solid var(--fg3);transform:rotate(-45deg)}
-.vistazo{border-top:1px solid var(--line);margin-top:4px}
-.vistazo>summary{list-style:none;cursor:pointer;padding:16px 2px;font-size:15px;font-weight:500;
+.plg{border-top:1px solid var(--line);margin-top:4px}
+.plg>summary{list-style:none;cursor:pointer;padding:16px 2px;font-size:15px;font-weight:500;
   display:flex;align-items:center;gap:12px}
-.vistazo>summary::-webkit-details-marker{display:none}
-.vistazo>summary::after{content:"";margin-left:auto;width:8px;height:8px;
+.plg>summary::-webkit-details-marker{display:none}
+.plg>summary::after{content:"";margin-left:auto;width:8px;height:8px;
   border-right:1.4px solid var(--fg3);border-bottom:1.4px solid var(--fg3);
   transform:rotate(-45deg);transition:transform .22s}
-.vistazo[open]>summary::after{transform:rotate(45deg) translate(-1px,-1px)}
+.plg[open]>summary::after{transform:rotate(45deg) translate(-1px,-1px)}
 
 /* ---------- listas */
 .items{display:flex;flex-direction:column}
@@ -374,6 +374,14 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--line)}
 .ck input:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
 .ck input:checked + span{color:var(--fg3);text-decoration:line-through}
 .ck .imp{color:var(--alert)}
+
+/* ---------- ayuda: un número de emergencia */
+.emg{padding:19px 0;border-top:1px solid var(--line)}
+.emgs .emg:first-child{border-top:none;padding-top:4px}
+.emg .et{font-weight:500;font-size:16.5px;line-height:1.4}
+.emg .jpx{font-size:17px;font-weight:500;margin-top:9px;line-height:1.5}
+.emg .mas{margin-top:11px}
+.emg .mas .x{color:var(--fg2);font-size:14px;line-height:1.7;max-width:58ch;padding-top:9px}
 
 /* ---------- ayuda */
 .sos{border:1px solid var(--alert);background:var(--alert-soft);border-radius:var(--r);
@@ -786,16 +794,23 @@ function vReservas(){
 
 // ---------------- GUÍA
 function vGuia(){
-  let h=`<p class="lede">Lo que conviene saber antes de subirse al avión y mientras estén allá.</p>
-    <h2 class="sec">Notas prácticas</h2><div class="items">`;
-  D.N.forEach(n=>h+=`<div class="item"><div class="t">${esc(n.t)}</div><div class="x">${esc(n.x)}</div></div>`);
-  h+=`</div><h2 class="sec">Frases que sirven todo el viaje</h2><div class="fr">`;
+  // primero lo que se usa de pie frente a alguien; lo de consulta, plegado
+  let h=`<div class="hero"><div class="k">Para salir del paso</div>
+    <div class="big">Guía</div>
+    <div class="sub">Las frases están arriba porque son lo único que se usa en el momento.
+    Lo demás se consulta, así que vive plegado.</div></div>`;
+  h+=`<h2 class="sec">Frases que sirven todo el viaje</h2><div class="fr">`;
   D.F.forEach(f=>h+=`<div class="frase"><b>${esc(f.j)}</b><span class="p">${esc(f.p)}</span>
     <span class="e">${esc(f.e)}</span>
     ${f.k?`<span class="e" style="font-size:16px;color:var(--fg);font-weight:500;margin-top:3px">${esc(f.k)}</span>`:""}</div>`);
-  h+=`</div><h2 class="sec">Glosario</h2><div class="glos">`;
+  h+=`</div><h2 class="sec">Notas prácticas</h2>`;
+  D.N.forEach(n=>h+=`<details class="prob"><summary>${esc(n.t)}</summary>
+    <div class="cuerpo"><div class="x" style="color:var(--fg2);font-size:14.5px;
+      line-height:1.72;max-width:60ch">${esc(n.x)}</div></div></details>`);
+  h+=`<details class="plg"><summary>Glosario · ${D.G.length} palabras</summary>
+    <div class="glos" style="padding-bottom:10px">`;
   D.G.forEach(g=>h+=`<div class="gl"><b>${esc(g.t)}</b><span>${esc(g.x)}</span></div>`);
-  h+=`</div>`;
+  h+=`</div></details>`;
   return h;
 }
 
@@ -898,16 +913,15 @@ function vAyuda(){
   const u=ho.lat!=null?`https://www.google.com/maps/dir/?api=1&destination=${ho.lat}%2C${ho.lng}&travelmode=transit`:"";
   if(u)h+=`<a class="go" href="${u}" target="_blank" rel="noopener">${ICON_GO} Llévame al hotel</a>`;
   if(ho.jp)h+=`<button class="go" data-jp="${hk}">${ICON_JP} Mostrar en japonés</button>`;
-  h+=`</div></div>
-    <p class="lede">Nada de esto es grave si sabes qué hacer. Japón es de los países más seguros
-      y más ordenados para resolver un problema: en cualquier estación hay alguien que ayuda.</p>
-    <h2 class="sec">Números de emergencia</h2><div class="items">`;
+  h+=`</div></div>`;
+
+  h+=`<h2 class="sec">Números de emergencia</h2><div class="emgs">`;
   D.EM.forEach(e=>{
-    h+=`<div class="item"><div class="t">${esc(e.t)}</div>
-      <div class="tel"><span>${esc(e.n)}</span></div>
-      <div class="x">${esc(e.x)}</div>`;
-    if(e.k)h+=`<div class="x" style="font-size:17px;color:var(--fg);font-weight:500;margin-top:8px">${esc(e.k)}</div>`;
-    h+=`</div>`;
+    h+=`<div class="emg"><div class="et">${esc(e.t)}</div>
+      <div class="tel"><span>${esc(e.n)}</span></div>`;
+    if(e.k)h+=`<div class="jpx">${esc(e.k)}</div>`;
+    h+=`<details class="mas"><summary>Cuándo y cómo</summary>
+      <div class="x">${esc(e.x)}</div></details></div>`;
   });
   h+=`</div><h2 class="sec">Si algo sale mal</h2>`;
   D.PR.forEach(pb=>{
@@ -918,21 +932,22 @@ function vAyuda(){
       padding-top:11px;border-top:1px dashed var(--line)">${esc(pb.k)}</div>`;
     h+=`</div></details>`;
   });
-  h+=`<h2 class="sec">Cómo funciona el tren</h2><div class="items">`;
-  D.TR.forEach(t=>h+=`<div class="item"><div class="t">${esc(t.t)}</div><div class="x">${esc(t.x)}</div></div>`);
-  h+=`</div><h2 class="sec">Los tres hoteles</h2><div class="items">`;
+  h+=`<h2 class="sec">Cómo funciona el tren</h2>`;
+  D.TR.forEach(t=>h+=`<details class="prob"><summary>${esc(t.t)}</summary>
+    <div class="cuerpo"><div class="x" style="color:var(--fg2);font-size:14.5px;
+      line-height:1.72;max-width:60ch">${esc(t.x)}</div></div></details>`);
+  h+=`<details class="plg"><summary>Los tres hoteles</summary><div class="items">`;
   ["hotel_tko","hotel_kyo","hotel_osa"].forEach(k=>{
     const p=D.L[k];
     h+=`<div class="item"><div class="t">${esc(p.n.split(" (")[0])}</div>
-      <div class="x">${esc(p.d)}</div><div class="acts">`;
+      <div class="x">${esc(p.d)}</div><div class="acts" style="margin-top:12px">`;
     if(p.lat!=null)h+=`<a class="go" href="https://www.google.com/maps/dir/?api=1&destination=${p.lat}%2C${p.lng}&travelmode=transit" target="_blank" rel="noopener">${ICON_GO} Ruta</a>`;
     if(p.jp)h+=`<button class="go" data-jp="${k}">${ICON_JP} En japonés</button>`;
     h+=`</div></div>`;
   });
-  h+=`</div>`;
+  h+=`</div></details>`;
   return h;
 }
-
 
 // ---------------- saber
 function vSaber(){
