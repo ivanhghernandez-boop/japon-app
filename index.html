@@ -73,6 +73,8 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:va
 .clocks{order:2;margin-left:auto;display:flex;gap:14px;font-family:var(--mono);font-size:11px;
   font-variant-numeric:tabular-nums;color:var(--fg2);text-align:right}
 .clocks b{display:block;font-size:14px;font-weight:600;color:var(--fg);letter-spacing:-.02em}
+.clocks b s{text-decoration:none;font-size:9.5px;font-weight:500;color:var(--fg3);
+  margin-left:2px;letter-spacing:0}
 .clocks i{font-style:normal;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg3)}
 nav{order:3;flex:1 0 100%;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;padding-bottom:7px}
 nav::-webkit-scrollbar{display:none}
@@ -246,8 +248,8 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding-block:18px 8px;
 <header><div class="wrap hdr">
   <div class="brand"><i></i>JAPÓN</div>
   <div class="clocks">
-    <div><i>México</i><b class="mono" id="cmx">--:--</b></div>
-    <div><i>Japón</i><b class="mono" id="cjp">--:--</b></div>
+    <div><i>México</i><b class="mono" id="cmx">--:--<s>am</s></b></div>
+    <div><i>Japón</i><b class="mono" id="cjp">--:--<s>pm</s></b></div>
   </div>
   <nav id="nav"></nav>
 </div></header>
@@ -280,10 +282,16 @@ function ruta(a,b){if(a===b)return"";const x=D.L[a],y=D.L[b];if(!x||!y||x.lat==n
   return `https://www.google.com/maps/dir/?api=1&origin=${x.lat}%2C${x.lng}&destination=${y.lat}%2C${y.lng}&travelmode=transit`;}
 
 // ---------------- relojes
-function tz(d,z){return new Intl.DateTimeFormat("es-MX",{timeZone:z,hour:"2-digit",minute:"2-digit",hour12:false}).format(d);}
+function tz(d,z){
+  const p=new Intl.DateTimeFormat("en-US",{timeZone:z,hour:"numeric",minute:"2-digit",hour12:true})
+    .formatToParts(d);
+  const g=t=>(p.find(x=>x.type===t)||{}).value||"";
+  return {h:g("hour")+":"+g("minute"), s:g("dayPeriod").toLowerCase()};}
 function tick(){const n=new Date();
-  document.getElementById("cmx").textContent=tz(n,"America/Mexico_City");
-  document.getElementById("cjp").textContent=tz(n,"Asia/Tokyo");}
+  for(const [id,z] of [["cmx","America/Mexico_City"],["cjp","Asia/Tokyo"]]){
+    const t=tz(n,z), el=document.getElementById(id);
+    el.innerHTML=esc(t.h)+'<s>'+esc(t.s)+'</s>';
+  }}
 
 function dias(ms){return Math.floor(ms/864e5);}
 function cuenta(iso){
