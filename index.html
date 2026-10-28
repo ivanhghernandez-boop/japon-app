@@ -1,8 +1,8 @@
-<title>Japón 2026</title>
+<title>Japón</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="apple-touch-icon" href="icon-180.png">
 <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
-<meta name="apple-mobile-web-app-title" content="Japón 2026">
+<meta name="apple-mobile-web-app-title" content="Japón">
 <meta name="theme-color" content="#0D131C">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -55,8 +55,9 @@ button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 header{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--panel);
   border-bottom:1px solid var(--line)}
 .hrow{display:flex;align-items:center;gap:12px;padding-block:10px}
-.brand{font-weight:900;font-size:17px;letter-spacing:-.01em;white-space:nowrap}
-.brand span{color:var(--acc)}
+.brand{font-weight:900;font-size:16px;letter-spacing:.17em;white-space:nowrap;
+  display:flex;align-items:center;gap:9px}
+.brand i{width:11px;height:11px;border-radius:50%;background:var(--acc);flex:0 0 auto}
 .clocks{margin-left:auto;display:flex;gap:14px;font-family:var(--mono);font-size:11px;
   font-variant-numeric:tabular-nums;color:var(--fg2);text-align:right}
 .clocks b{display:block;font-size:14px;font-weight:600;color:var(--fg);letter-spacing:-.02em}
@@ -185,7 +186,7 @@ footer{border-top:1px solid var(--line);margin-top:34px;padding-block:18px 8px;
 
 <header><div class="wrap">
   <div class="hrow">
-    <div class="brand">Japón<span>.</span>2026</div>
+    <div class="brand"><i></i>JAPÓN</div>
     <div class="clocks">
       <div><i>México</i><b class="mono" id="cmx">--:--</b></div>
       <div><i>Japón</i><b class="mono" id="cjp">--:--</b></div>
