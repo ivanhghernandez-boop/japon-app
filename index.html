@@ -165,22 +165,8 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--line)}
 .dhead .z{color:var(--c);font-weight:500;font-size:13px;margin-top:7px;letter-spacing:.07em}
 .dhead .r{color:var(--fg2);font-size:14.5px;margin-top:12px;max-width:56ch;line-height:1.7}
 
-/* ---------- riel */
-.rail{position:relative;padding-left:84px}
-.rail::before{content:"";position:absolute;left:68px;top:14px;bottom:30px;width:1px;
-  background:var(--line)}
-.stop{position:relative;margin-bottom:30px}
-.stop .time{position:absolute;left:-84px;top:1px;width:54px;text-align:right;
-  font-size:13.5px;font-weight:500;font-variant-numeric:tabular-nums;line-height:1.4}
-.stop .time em{display:block;font-style:normal;font-size:11px;color:var(--fg3);font-weight:400}
-.stop .dot{position:absolute;left:-21px;top:7px;width:7px;height:7px;border-radius:50%;
-  background:var(--bg);border:1px solid var(--c);z-index:1}
-.stop.key .dot{background:var(--c);width:9px;height:9px;left:-22px;top:6px}
-.card{padding:0}
-.card .t{font-weight:500;font-size:17px;letter-spacing:-.005em;line-height:1.4}
-.stop.key .card .t{font-family:var(--mincho);font-size:19px;font-weight:500}
-.card .x{color:var(--fg2);font-size:14.5px;margin-top:8px;max-width:58ch;line-height:1.72}
-.badges{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+/* ---------- piezas compartidas: insignias, metadatos y botones */
+.badges{display:flex;flex-wrap:wrap;gap:7px}
 .b{font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
   padding:4px 10px;border-radius:99px;border:1px solid var(--line);color:var(--fg3)}
 .b.ok{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 45%,transparent)}
@@ -190,15 +176,108 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--line)}
   color:var(--fg2);max-width:58ch;line-height:1.65}
 .meta div{margin-bottom:5px}
 .meta b{color:var(--fg);font-weight:500}
-.acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.acts{display:flex;flex-wrap:wrap;gap:8px}
 .go{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:99px;
   font-size:13.5px;font-weight:500;text-decoration:none;border:1px solid var(--line);
-  color:var(--fg);transition:background .18s,border-color .18s}
+  color:var(--fg);background:var(--surface);transition:background .18s,border-color .18s}
 .go:hover{background:var(--surface2)}
 .go.p{background:var(--acc);border-color:var(--acc);color:var(--surface)}
 .go.p:hover{filter:brightness(1.1)}
 .go svg{width:14px;height:14px;flex:0 0 auto}
+.go .de{opacity:.75;font-weight:400;white-space:nowrap}
 .go:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+
+/* ---------- día: pendientes plegados */
+.fold{border:1px solid var(--line);border-radius:13px;background:var(--surface);
+  overflow:hidden;margin-bottom:4px}
+.fold>summary{display:flex;align-items:center;gap:12px;padding:14px 16px;cursor:pointer;
+  list-style:none;font-size:15px;font-weight:500}
+.fold>summary::-webkit-details-marker{display:none}
+.fold>summary em{margin-left:auto;font-style:normal;font-size:12.5px;color:var(--fg3);
+  font-variant-numeric:tabular-nums}
+.fold>summary::after{content:"";flex:0 0 auto;width:8px;height:8px;
+  border-right:1.4px solid var(--fg3);border-bottom:1.4px solid var(--fg3);
+  transform:rotate(-45deg);transition:transform .22s}
+.fold[open]>summary::after{transform:rotate(45deg) translate(-1px,-1px)}
+.fold .ck{border:none;padding:0 16px 8px;margin:0}
+
+/* ---------- día: tramos */
+.tramo{font-family:var(--mincho);font-size:10px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--fg3);font-weight:500;margin:30px 0 2px}
+
+/* ---------- día: renglón plegable (traslados, comidas, tiempo libre) */
+.rw{border-top:1px solid var(--line)}
+.rw>summary{display:flex;align-items:center;gap:13px;padding:13px 2px;cursor:pointer;
+  list-style:none;font-size:15px;color:var(--fg2);line-height:1.4}
+.rw>summary::-webkit-details-marker{display:none}
+.rw>summary b{flex:0 0 auto;width:64px;font-size:13px;font-weight:500;color:var(--fg2);
+  font-variant-numeric:tabular-nums}
+.rw>summary b s{text-decoration:none;font-size:9.5px;color:var(--fg3);margin-left:2px}
+.rw>summary>span{flex:1 1 auto;min-width:0}
+.rw>summary::after{content:"";flex:0 0 auto;width:7px;height:7px;
+  border-right:1.4px solid var(--fg3);border-bottom:1.4px solid var(--fg3);
+  transform:rotate(-45deg);transition:transform .22s}
+.rw[open]>summary{color:var(--fg);font-weight:500}
+.rw[open]>summary::after{transform:rotate(45deg) translate(-1px,-1px)}
+.rwb{padding:0 2px 17px 77px}
+.rwb .x{color:var(--fg2);font-size:14px;line-height:1.7;max-width:56ch}
+.rwb .meta{margin-top:12px}
+.rwb .acts{margin-top:13px}
+
+/* ---------- día: tarjeta de actividad real */
+.key{display:flex;gap:14px;margin:15px 0 17px;padding:17px 17px 18px;background:var(--surface);
+  border:1px solid var(--line);border-radius:16px;box-shadow:0 1px 2px rgba(43,40,36,.05)}
+.key .kh{flex:0 0 auto;width:48px;font-variant-numeric:tabular-nums;padding-top:3px}
+.key .kh b{display:block;font-size:14px;font-weight:600;line-height:1.3}
+.key .kh b s{text-decoration:none;font-size:9.5px;font-weight:400;color:var(--fg3);margin-left:2px}
+.key .kh em{display:block;font-style:normal;font-size:11px;color:var(--fg3);margin-top:2px}
+.key .kc{min-width:0;flex:1 1 auto}
+.key .kt{font-family:var(--mincho);font-size:21px;font-weight:500;line-height:1.25;
+  letter-spacing:-.005em}
+.key .kx{color:var(--fg2);font-size:14.5px;line-height:1.7;margin-top:9px;max-width:54ch}
+.key .badges{margin-top:11px}
+.key .acts{margin-top:14px}
+.mas{margin-top:13px;border-top:1px solid var(--line)}
+.mas>summary{list-style:none;cursor:pointer;padding:11px 0 0;font-size:12.5px;
+  color:var(--fg3);font-weight:500;display:flex;align-items:center;gap:8px}
+.mas>summary::-webkit-details-marker{display:none}
+.mas>summary::after{content:"";width:6px;height:6px;
+  border-right:1.3px solid var(--fg3);border-bottom:1.3px solid var(--fg3);
+  transform:rotate(-45deg);transition:transform .22s}
+.mas[open]>summary::after{transform:rotate(45deg) translate(-1px,-1px)}
+.mas .meta{border-top:none;padding-top:9px;margin-top:0}
+
+/* ---------- hoy: lo que pasa ahora */
+.now{border-bottom:1px solid var(--line);padding-bottom:27px;margin-bottom:2px}
+.now .k{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--alert);
+  font-weight:600}
+.now .t{font-family:var(--mincho);font-size:clamp(34px,10.5vw,54px);font-weight:400;
+  line-height:1.12;letter-spacing:-.012em;margin-top:11px}
+.now .when{color:var(--c,var(--acc));font-weight:500;font-size:13.5px;letter-spacing:.04em;
+  margin-top:9px}
+.now .x{color:var(--fg2);font-size:15px;line-height:1.7;margin-top:13px;max-width:52ch}
+.now .acts{margin-top:17px}
+.nx{display:flex;align-items:center;gap:13px;width:100%;padding:13px 2px;text-align:left;
+  border-top:1px solid var(--line);font-size:15px}
+.nx:first-of-type{border-top:none}
+.nx b{flex:0 0 auto;width:66px;font-size:13px;font-weight:500;color:var(--fg2);
+  font-variant-numeric:tabular-nums}
+.nx b s{text-decoration:none;font-size:9.5px;color:var(--fg3);margin-left:2px}
+.nx>span{flex:1 1 auto;min-width:0}
+.nx em{flex:0 0 auto;font-style:normal;font-size:9px;letter-spacing:.11em;text-transform:uppercase;
+  padding:3px 8px;border-radius:99px;border:1px solid var(--line);color:var(--fg3)}
+.nx em.ok{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 45%,transparent)}
+.nx em.warn{color:var(--alert);border-color:color-mix(in srgb,var(--alert) 45%,transparent)}
+.nx i{flex:0 0 auto;width:7px;height:7px;border-right:1.4px solid var(--fg3);
+  border-bottom:1.4px solid var(--fg3);transform:rotate(-45deg)}
+.vistazo{border-top:1px solid var(--line);margin-top:4px}
+.vistazo>summary{list-style:none;cursor:pointer;padding:16px 2px;font-size:15px;font-weight:500;
+  display:flex;align-items:center;gap:12px}
+.vistazo>summary::-webkit-details-marker{display:none}
+.vistazo>summary::after{content:"";margin-left:auto;width:8px;height:8px;
+  border-right:1.4px solid var(--fg3);border-bottom:1.4px solid var(--fg3);
+  transform:rotate(-45deg);transition:transform .22s}
+.vistazo[open]>summary::after{transform:rotate(45deg) translate(-1px,-1px)}
 
 /* ---------- listas */
 .items{display:flex;flex-direction:column}
@@ -417,6 +496,22 @@ function tick(){const n=new Date();
   }}
 
 function dias(ms){return Math.floor(ms/864e5);}
+// las horas del plan vienen en 24 h; se muestran en 12 h con el am/pm chiquito
+function h12(t){const m=/^(\d{1,2}):(\d{2})$/.exec(t||"");if(!m)return esc(t||"");
+  const H=+m[1],s=H<12?"am":"pm";return (H%12||12)+":"+m[2]+'<s>'+s+'</s>';}
+function h12t(t){const m=/^(\d{1,2}):(\d{2})$/.exec(t||"");if(!m)return t||"";
+  const H=+m[1];return (H%12||12)+":"+m[2]+" "+(H<12?"am":"pm");}
+// nombres de lugar recortados, para que los botones no se partan en dos renglones
+// el lugar, salvo que repita el título; entonces la ciudad
+function donde(act,lug,d){
+  const c=D.CN[d.ciudad]||d.z;
+  if(!lug||!act)return c;
+  const n=corto(lug.n);
+  return n.toLowerCase()===act.t.toLowerCase()?c:n;}
+function corto(n){const x=n.split(" (")[0].split(" —")[0].trim();
+  return x.length>20?x.slice(0,19).trim()+"…":x;}
+function tramo(t){const H=+(t||"0").split(":")[0];
+  return H<12?"Mañana":(H<18?"Tarde":"Noche");}
 function cuenta(iso){
   const t=new Date(iso)-new Date();
   if(t<0)return null;
@@ -431,26 +526,59 @@ function vAhora(){
   const jp=new Intl.DateTimeFormat("sv-SE",{timeZone:"Asia/Tokyo",year:"numeric",month:"2-digit",day:"2-digit"}).format(n);
   const hoy=D.D.find(d=>d.iso===jp);
   let h="";
+
   if(hoy){
+    // ---- en viaje: una sola cosa en pantalla
+    const c=CC[hoy.ciudad];
     const hm=new Intl.DateTimeFormat("sv-SE",{timeZone:"Asia/Tokyo",hour:"2-digit",minute:"2-digit",hour12:false}).format(n);
     const ps=D.P.filter(p=>p.d===hoy.n);
     const act=ps.filter(p=>p.ini<=hm&&(!p.fin||p.fin>hm)).pop();
-    const sig=ps.find(p=>p.ini>hm);
-    h+=`<div class="hero" style="--c:${CC[hoy.ciudad]}">
-      <div class="k">Día ${hoy.n} de 10 · ${esc(hoy.f)}</div>
-      <div class="big">${act?esc(act.t):"Tiempo libre"}</div>
-      <div class="sub">${act?esc(act.h)+" · "+esc(act.x.slice(0,150)):esc(hoy.z)}</div></div>`;
-    if(sig)h+=`<div class="tile"><div class="k">Lo que sigue</div>
-      <div class="v">${esc(sig.ini)} · ${esc(sig.t)}</div>
-      <div class="n">${esc(sig.x.slice(0,180))}</div></div>`;
-  }else if(n<salida){
+    const sig=ps.filter(p=>p.ini>hm).slice(0,5);
+    const lug=act&&act.lugar?D.L[act.lugar]:null;
+    h+=`<div class="now" style="--c:${c}">
+      <div class="k">Ahora · ${h12t(hm)}</div>
+      <div class="t">${act?esc(act.t):"Tiempo libre"}</div>
+      <div class="when">${act?h12t(act.ini)+(act.fin?" – "+h12t(act.fin):""):""}
+        · ${esc(donde(act,lug,hoy))}</div>`;
+    if(act)h+=`<div class="x">${esc(act.x)}</div>`;
+    if(act&&lug){
+      h+=`<div class="acts">`;
+      const r=act.desde?ruta(act.desde,act.lugar):"";
+      if(r)h+=`<a class="go p" href="${r}" target="_blank" rel="noopener">${ICON_GO} Cómo llegar</a>`;
+      const pn=pin(act.lugar);
+      if(pn)h+=`<a class="go" href="${pn}" target="_blank" rel="noopener">${ICON_PIN} Ver lugar</a>`;
+      if(lug.jp)h+=`<button class="go" data-jp="${act.lugar}">${ICON_JP} En japonés</button>`;
+      h+=`</div>`;
+    }
+    h+=`</div>`;
+    if(sig.length){
+      h+=`<h2 class="sec">A continuación</h2>`;
+      sig.forEach(p=>{
+        let tag="";
+        if(p.act){const e=p.act.estado;
+          const cl=e.includes("PAGADO")?"ok":(e==="Gratis"?"":"warn");
+          tag=`<em class="${cl}">${esc(e)}</em>`;}
+        h+=`<button class="nx" data-v2="dias"><b>${h12(p.ini)}</b>
+          <span>${esc(p.t)}</span>${tag}<i></i></button>`;
+      });
+    }
+    h+=`<h2 class="sec">Si te atoras</h2>
+      <div class="sos"><div class="k">Ayuda rápida</div>
+        <div class="t">Perdido, sin tren, sin batería o sin saldo</div>
+        <div class="acts"><button class="go" data-v2="ayuda">Abrir ayuda ${ICON_GO}</button></div></div>`;
+    return h;
+  }
+
+  // ---- antes o después del viaje
+  if(n<salida){
     const d=dias(salida-n);
-    h+=`<div class="hero"><div class="k">Cuenta regresiva</div>
-      <div class="big">${d} día${d===1?"":"s"}</div>
-      <div class="sub">Para despegar de la Ciudad de México. AM 0058, martes 8 de diciembre a las 21:45.</div></div>`;
+    h+=`<div class="now"><div class="k">Cuenta regresiva</div>
+      <div class="t">${d} día${d===1?"":"s"}</div>
+      <div class="x">Para despegar de la Ciudad de México. AM 0058, martes 8 de diciembre
+      a las 9:45 de la noche.</div></div>`;
   }else{
-    h+=`<div class="hero"><div class="k">El viaje</div><div class="big">Terminado</div>
-      <div class="sub">10 al 19 de diciembre de 2026.</div></div>`;
+    h+=`<div class="now"><div class="k">El viaje</div><div class="t">Terminado</div>
+      <div class="x">10 al 19 de diciembre de 2026.</div></div>`;
   }
   const prox=D.FE.filter(f=>new Date(f.iso)>n).slice(0,3);
   if(prox.length){
@@ -466,66 +594,91 @@ function vAhora(){
     <div class="sos"><div class="k">Ayuda rápida</div>
       <div class="t">Perdido, sin tren, sin batería o sin saldo</div>
       <div class="acts"><button class="go" data-v2="ayuda">Abrir ayuda ${ICON_GO}</button></div></div>`;
-  h+=`<h2 class="sec">El viaje de un vistazo</h2><div class="grid2">`;
+  h+=`<details class="vistazo"><summary>Los 10 días de un vistazo</summary><div class="grid2">`;
   D.D.forEach(d=>{h+=`<div class="tile" style="border-left:3px solid ${CC[d.ciudad]}">
     <div class="k">Día ${d.n} · ${esc(d.f.split(" de ")[0])}</div>
     <div class="v">${esc(d.z)}</div><div class="n">${esc(d.r)}</div></div>`;});
-  h+=`</div>`;
+  h+=`</div></details>`;
   return h;
 }
 
 // ---------------- DÍAS
 let diaSel=1;
 function vDias(){
-  let h=`<p class="lede">Los horarios son rangos flexibles, no citas. Cada parada trae un botón
-    que abre Google Maps con la ruta desde la parada anterior, en transporte público.</p>
-    <div class="dayswrap"><div class="days">`;
+  let h=`<div class="dayswrap"><div class="days">`;
   D.D.forEach(d=>{h+=`<button class="dbtn" data-dia="${d.n}" style="--c:${CC[d.ciudad]}"
     aria-current="${d.n===diaSel}"><span class="n">${d.n}</span><span class="d">${esc(d.f.split(" ")[1])} dic</span></button>`;});
   h+=`</div><div id="dcont"></div></div>`;
   return h;
 }
+
+// dónde / cómo llegar / reserva: el detalle que solo se ocupa al moverse
+function metaDe(p){
+  const lug=p.lugar?D.L[p.lugar]:null; if(!lug)return "";
+  let h=`<div class="meta"><div><b>Dónde:</b> ${esc(lug.d)}</div>
+    <div><b>Cómo llegar:</b> ${esc(lug.c)}</div>`;
+  if(p.act&&p.act.reserva)h+=`<div><b>Reserva:</b> ${esc(p.act.reserva)}</div>`;
+  return h+`</div>`;
+}
+function accionesDe(p){
+  const lug=p.lugar?D.L[p.lugar]:null; if(!lug)return "";
+  let h=`<div class="acts">`;
+  const r=p.desde?ruta(p.desde,p.lugar):"";
+  if(r)h+=`<a class="go p" href="${r}" target="_blank" rel="noopener">${ICON_GO} Cómo llegar${
+    p.desde&&D.L[p.desde]?` <span class="de">desde ${esc(corto(D.L[p.desde].n))}</span>`:""}</a>`;
+  const pn=pin(p.lugar);
+  if(pn)h+=`<a class="go" href="${pn}" target="_blank" rel="noopener">${ICON_PIN} Ver lugar</a>`;
+  if(lug.jp)h+=`<button class="go" data-jp="${p.lugar}">${ICON_JP} En japonés</button>`;
+  return h+`</div>`;
+}
+function insignias(p){
+  if(!p.dur&&!p.act)return "";
+  let h=`<div class="badges">`;
+  if(p.dur&&p.dur!=="—")h+=`<span class="b">${esc(p.dur)}</span>`;
+  if(p.act){const e=p.act.estado;
+    const cl=e.includes("PAGADO")?"ok":(e==="Gratis"?"":"warn");
+    h+=`<span class="b ${cl}">${esc(e)}</span>`;}
+  return h+`</div>`;
+}
+
 function renderDia(){
   const d=D.D.find(x=>x.n===diaSel), c=CC[d.ciudad];
   let h=`<div class="dhead" style="--c:${c}"><div class="t">${esc(d.f)}</div>
     <div class="z">${esc(d.z)}</div><div class="r">${esc(d.r)}</div></div>`;
+
+  // pendientes plegados: solo el conteo a la vista
   const items=(D.CKD[String(diaSel)]||[]).concat(D.CKB);
-  h+=`<div class="ck"><h3>Antes de salir del hotel</h3>`;
+  let ck="", hechos=0;
   items.forEach((it,i)=>{
     const key="jp-ck-"+diaSel+"-"+i;
     let on=false; try{on=localStorage.getItem(key)==="1";}catch(_){}
+    if(on)hechos++;
     const imp=/SIN EXCEPCI|EFECTIVO|AL ENTRAR|AYER/.test(it);
-    h+=`<label><input type="checkbox" data-ck="${key}"${on?" checked":""}>
+    ck+=`<label><input type="checkbox" data-ck="${key}"${on?" checked":""}>
       <span${imp?' class="imp"':''}>${esc(it)}</span></label>`;
   });
-  h+=`</div><div class="rail" style="--c:${c}">`;
+  h+=`<details class="fold"><summary><span>${items.length} cosas antes de salir</span>
+    <em>${hechos} de ${items.length}</em></summary><div class="ck">${ck}</div></details>`;
+
+  // el día: solo las actividades reales llevan tarjeta
+  let actual="";
   D.P.filter(p=>p.d===diaSel).forEach(p=>{
-    const key=!!p.act, lug=p.lugar?D.L[p.lugar]:null;
-    h+=`<div class="stop ${key?"key":(lug?"":"plain")}">
-      <div class="time">${esc(p.ini)}${p.fin?`<em>${esc(p.fin)}</em>`:""}</div>
-      <div class="dot"></div><div class="card">
-      <div class="t">${esc(p.t)}</div><div class="x">${esc(p.x)}</div>`;
-    if(p.dur||p.act){h+=`<div class="badges">`;
-      if(p.dur&&p.dur!=="—")h+=`<span class="b">${esc(p.dur)}</span>`;
-      if(p.act){const e=p.act.estado;
-        const cl=e.includes("PAGADO")?"ok":(e==="Gratis"?"":"warn");
-        h+=`<span class="b ${cl}">${esc(e)}</span>`;}
-      h+=`</div>`;}
-    if(lug){
-      h+=`<div class="meta"><div><b>Dónde:</b> ${esc(lug.d)}</div>
-        <div><b>Cómo llegar:</b> ${esc(lug.c)}</div>`;
-      if(p.act&&p.act.reserva)h+=`<div><b>Reserva:</b> ${esc(p.act.reserva)}</div>`;
-      h+=`</div><div class="acts">`;
-      const r=p.desde?ruta(p.desde,p.lugar):"";
-      if(r)h+=`<a class="go p" href="${r}" target="_blank" rel="noopener">${ICON_GO} Cómo llegar${p.desde&&D.L[p.desde]?` <span style="opacity:.75;font-weight:400">desde ${esc(D.L[p.desde].n.split(" (")[0].split(" —")[0])}</span>`:""}</a>`;
-      const pn=pin(p.lugar);
-      if(pn)h+=`<a class="go" href="${pn}" target="_blank" rel="noopener">${ICON_PIN} Ver lugar</a>`;
-      if(lug.jp)h+=`<button class="go" data-jp="${p.lugar}">${ICON_JP} En japonés</button>`;
-      h+=`</div>`;
+    const t=tramo(p.ini);
+    if(t!==actual){h+=`<div class="tramo">${t}</div>`;actual=t;}
+    if(p.act){
+      h+=`<div class="key"><div class="kh"><b>${h12(p.ini)}</b>${
+        p.fin?`<em>${h12t(p.fin)}</em>`:""}</div><div class="kc">
+        <div class="kt">${esc(p.t)}</div>${insignias(p)}
+        <div class="kx">${esc(p.x)}</div>${accionesDe(p)}`;
+      const m=metaDe(p);
+      if(m)h+=`<details class="mas"><summary>Dónde y cómo llegar</summary>${m}</details>`;
+      h+=`</div></div>`;
+    }else{
+      h+=`<details class="rw"><summary><b>${h12(p.ini)}</b><span>${esc(p.t)}</span></summary>
+        <div class="rwb"><div class="x">${esc(p.x)}</div>${metaDe(p)}${accionesDe(p)}</div></details>`;
     }
-    h+=`</div></div>`;
   });
-  h+=`</div>`;
+
   document.getElementById("dcont").innerHTML=h;
   document.querySelectorAll(".dbtn").forEach(b=>b.setAttribute("aria-current",String(+b.dataset.dia===diaSel)));
 }
