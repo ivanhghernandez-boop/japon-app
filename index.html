@@ -1,0 +1,474 @@
+<title>Japón 2026</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+<meta name="apple-mobile-web-app-title" content="Japón 2026">
+<meta name="theme-color" content="#0D131C">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Tablero de salidas: franja de hora en mono a la izquierda, riel vertical que
+   encadena las paradas, color de línea por ciudad, vermellón solo para lo urgente. */
+:root{
+  --bg:#F5F7FA; --panel:#FFFFFF; --panel2:#EEF2F7; --line:#D6DEE8;
+  --fg:#111A26; --fg2:#4A5768; --fg3:#7A879A;
+  --acc:#E04E2A; --acc-soft:#FBE8E2;
+  --tokio:#3B6FA8; --tsukuba:#6D5BA6; --nagoya:#B5702E; --kioto:#3D8168; --osaka:#A4484F;
+  --ok:#2F7D5C; --warn:#9A6B12;
+  --sans:"Zen Kaku Gothic New",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --r:12px; --shadow:0 1px 2px rgba(17,26,38,.06),0 4px 16px rgba(17,26,38,.05);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0D131C; --panel:#151E2B; --panel2:#1C2736; --line:#2A3747;
+  --fg:#E9EDF3; --fg2:#A6B3C4; --fg3:#73829A;
+  --acc:#FF7A52; --acc-soft:#38211B;
+  --tokio:#6FA3DB; --tsukuba:#A18EDC; --nagoya:#D9A05E; --kioto:#5FB394; --osaka:#D98088;
+  --ok:#5FBF93; --warn:#D9AE4E;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+  color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#0D131C; --panel:#151E2B; --panel2:#1C2736; --line:#2A3747;
+  --fg:#E9EDF3; --fg2:#A6B3C4; --fg3:#73829A;
+  --acc:#FF7A52; --acc-soft:#38211B;
+  --tokio:#6FA3DB; --tsukuba:#A18EDC; --nagoya:#D9A05E; --kioto:#5FB394; --osaka:#D98088;
+  --ok:#5FBF93; --warn:#D9AE4E;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 16px rgba(0,0,0,.3);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);margin:0;
+  font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);
+  z-index:40;background:var(--panel)}
+.wrap{max-width:860px;margin:0 auto;
+  padding-left:max(16px,env(safe-area-inset-left,0px));
+  padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{text-wrap:balance;margin:0}
+a{color:inherit}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* ---------- header */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:var(--panel);
+  border-bottom:1px solid var(--line)}
+.hrow{display:flex;align-items:center;gap:12px;padding-block:10px}
+.brand{font-weight:900;font-size:17px;letter-spacing:-.01em;white-space:nowrap}
+.brand span{color:var(--acc)}
+.clocks{margin-left:auto;display:flex;gap:14px;font-family:var(--mono);font-size:11px;
+  font-variant-numeric:tabular-nums;color:var(--fg2);text-align:right}
+.clocks b{display:block;font-size:14px;font-weight:600;color:var(--fg);letter-spacing:-.02em}
+.clocks i{font-style:normal;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--fg3)}
+nav{display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;padding-bottom:7px}
+nav::-webkit-scrollbar{display:none}
+nav button{padding:6px 12px;border-radius:99px;font-size:13px;font-weight:700;color:var(--fg3);
+  white-space:nowrap}
+nav button[aria-current="true"]{background:var(--fg);color:var(--bg)}
+nav button:not([aria-current="true"]):hover{color:var(--fg)}
+nav button:focus-visible,.dbtn:focus-visible,.go:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+
+main{padding-block:20px 56px}
+section[hidden]{display:none!important}
+.lede{color:var(--fg2);font-size:14px;margin-bottom:18px;max-width:62ch}
+h2.sec{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg3);
+  font-weight:700;margin:26px 0 12px;display:flex;align-items:center;gap:10px}
+h2.sec::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* ---------- ahora */
+.hero{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);
+  padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
+.hero .k{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--fg3);font-weight:700}
+.hero .big{font-family:var(--mono);font-size:clamp(34px,11vw,52px);font-weight:600;
+  letter-spacing:-.04em;line-height:1.05;margin:6px 0 2px;font-variant-numeric:tabular-nums}
+.hero .sub{color:var(--fg2);font-size:14px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.tile .k{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--fg3);font-weight:700}
+.tile .v{font-weight:700;font-size:15px;margin-top:3px}
+.tile .n{color:var(--fg2);font-size:13px;margin-top:4px}
+.tile.urge{border-color:var(--acc);background:var(--acc-soft)}
+.tile .cd{font-family:var(--mono);font-size:12px;color:var(--acc);font-weight:600;margin-top:6px}
+
+/* ---------- días */
+.days{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-bottom:10px;margin-bottom:4px}
+.days::-webkit-scrollbar{display:none}
+.dbtn{flex:0 0 auto;width:60px;padding:8px 0;border-radius:10px;background:var(--panel);
+  border:1px solid var(--line);text-align:center;transition:transform .12s}
+.dbtn:hover{transform:translateY(-1px)}
+.dbtn .n{font-family:var(--mono);font-size:19px;font-weight:600;line-height:1}
+.dbtn .d{font-size:10px;color:var(--fg3);margin-top:3px;letter-spacing:.04em}
+.dbtn[aria-current="true"]{background:var(--c);border-color:var(--c);color:#fff}
+.dbtn[aria-current="true"] .d{color:rgba(255,255,255,.85)}
+.dhead{border-left:4px solid var(--c);padding-left:14px;margin:18px 0 20px}
+.dhead .t{font-size:clamp(21px,5.5vw,27px);font-weight:900;letter-spacing:-.02em;line-height:1.15}
+.dhead .z{color:var(--c);font-weight:700;font-size:13px;margin-top:2px}
+.dhead .r{color:var(--fg2);font-size:14px;margin-top:8px;max-width:60ch}
+
+/* ---------- riel */
+.rail{position:relative;padding-left:86px}
+.rail::before{content:"";position:absolute;left:69px;top:12px;bottom:28px;width:2px;
+  background:var(--line)}
+.stop{position:relative;margin-bottom:14px}
+.stop .time{position:absolute;left:-86px;top:0;width:54px;text-align:right;
+  font-family:var(--mono);font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;
+  letter-spacing:-.02em;line-height:1.3}
+.stop .time em{display:block;font-style:normal;font-size:10px;color:var(--fg3);font-weight:400}
+.stop .dot{position:absolute;left:-25px;top:6px;width:11px;height:11px;border-radius:50%;
+  background:var(--bg);border:2.5px solid var(--c);z-index:1}
+.stop.key .dot{background:var(--c);box-shadow:0 0 0 4px var(--bg),0 0 0 5.5px var(--c)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.stop.key .card{box-shadow:var(--shadow)}
+.stop.plain .card{background:transparent;border-style:dashed}
+.card .t{font-weight:700;font-size:16px;letter-spacing:-.01em;line-height:1.3}
+.card .x{color:var(--fg2);font-size:14px;margin-top:6px}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.b{font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
+  padding:3px 8px;border-radius:99px;background:var(--panel2);color:var(--fg2)}
+.b.ok{background:transparent;color:var(--ok);box-shadow:inset 0 0 0 1px currentColor}
+.b.warn{background:transparent;color:var(--warn);box-shadow:inset 0 0 0 1px currentColor}
+.b.acc{background:var(--acc);color:#fff}
+.meta{margin-top:11px;padding-top:11px;border-top:1px dashed var(--line);font-size:13px;color:var(--fg2)}
+.meta div{margin-bottom:4px}
+.meta b{color:var(--fg);font-weight:700}
+.acts{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+.go{display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:9px;
+  font-size:13px;font-weight:700;text-decoration:none;border:1px solid var(--line);
+  background:var(--panel2);transition:background .15s}
+.go:hover{background:var(--line)}
+.go.p{background:var(--c);border-color:var(--c);color:#fff}
+.go.p:hover{filter:brightness(1.08)}
+.go svg{width:14px;height:14px;flex:0 0 auto}
+
+/* ---------- listas genéricas */
+.items{display:flex;flex-direction:column;gap:10px}
+.item{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.item .t{font-weight:700;font-size:15px}
+.item .x{color:var(--fg2);font-size:14px;margin-top:5px}
+.item ul{margin:8px 0 0;padding-left:18px;color:var(--fg2);font-size:13.5px}
+.item li{margin-bottom:5px}
+.item.rec{border-color:var(--ok)}
+.item.no{opacity:.72}
+.glos{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.gl{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.gl b{display:block;font-size:14.5px;margin-bottom:3px}
+.gl span{color:var(--fg2);font-size:13px}
+.fr{display:flex;flex-direction:column;gap:8px}
+.frase{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 14px;
+  display:flex;flex-wrap:wrap;gap:4px 14px;align-items:baseline}
+.frase b{font-size:15px;font-weight:700}
+.frase .p{font-family:var(--mono);font-size:12px;color:var(--acc);letter-spacing:-.02em}
+.frase .e{color:var(--fg2);font-size:13.5px;width:100%}
+.fl{display:flex;flex-direction:column;gap:12px}
+.fl .f{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.fl .code{font-family:var(--mono);font-size:12px;font-weight:600;color:var(--acc);letter-spacing:.04em}
+.fl .route{font-size:17px;font-weight:900;letter-spacing:-.02em;margin-top:3px;line-height:1.25}
+.fl .times{display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center;
+  margin:12px 0;padding:12px 0;border-block:1px solid var(--line)}
+.fl .times .w{font-family:var(--mono);font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
+.fl .times .w em{display:block;font-style:normal;font-size:11px;color:var(--fg3);font-family:var(--sans);
+  font-weight:400;margin-top:2px}
+.fl .times .mid{font-size:10px;color:var(--fg3);text-align:center;letter-spacing:.06em}
+.fl .times .r{text-align:right}
+footer{border-top:1px solid var(--line);margin-top:34px;padding-block:18px 8px;
+  color:var(--fg3);font-size:12px}
+@media(max-width:430px){
+  .rail{padding-left:72px}
+  .rail::before{left:57px}
+  .stop .time{left:-72px;width:44px;font-size:12px}
+  .stop .dot{left:-23px}
+  .clocks{gap:10px}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header><div class="wrap">
+  <div class="hrow">
+    <div class="brand">Japón<span>.</span>2026</div>
+    <div class="clocks">
+      <div><i>México</i><b class="mono" id="cmx">--:--</b></div>
+      <div><i>Japón</i><b class="mono" id="cjp">--:--</b></div>
+    </div>
+  </div>
+  <nav id="nav"></nav>
+</div></header>
+
+<main class="wrap">
+  <section id="v-ahora"></section>
+  <section id="v-dias" hidden></section>
+  <section id="v-vuelos" hidden></section>
+  <section id="v-seul" hidden></section>
+  <section id="v-reservas" hidden></section>
+  <section id="v-guia" hidden></section>
+  <footer>10 al 19 de diciembre de 2026 · Tokio, Tsukuba, Nagoya, Kioto y Osaka ·
+    Hecho para Ivan y su acompañante</footer>
+</main>
+
+<script>
+const D = {"L":{"sensoji":{"n":"Senso-ji","d":"2-3-1 Asakusa, Taito-ku, Tokio 111-0032","c":"Asakusa Station (Ginza / Asakusa / Tsukuba Express), 5 min a pie del hotel","lat":35.7147651,"lng":139.7966553},"akihabara":{"n":"Akihabara Electric Town","d":"Sotokanda, Chiyoda-ku, Tokio","c":"Akihabara Station (JR Yamanote / Hibiya / Tsukuba Express)","lat":35.6996473,"lng":139.7713703},"superpotato":{"n":"Super Potato","d":"1-11-2 Sotokanda, Chiyoda-ku, Tokio 101-0021 — pisos 3 a 5","c":"Akihabara Station, 5 min a pie","lat":35.6993585,"lng":139.7707015},"pokemoncafe":{"n":"Pokémon Café TOKYO","d":"2-11-2 Nihonbashi, Chuo-ku, Tokio 103-0027 — Takashimaya S.C. Edificio Este, piso 5","c":"Nihonbashi Station, conectado al edificio. A 2 estaciones de Akihabara","lat":35.6806372,"lng":139.7744369},"hoppy":{"n":"Hoppy-dori (Hoppy Street)","d":"Hoppy St, Asakusa, Taito-ku, Tokio 111-0032","c":"Asakusa Station, 7 min a pie","lat":35.7139938,"lng":139.7941552},"aist":{"n":"AIST-Cube","d":"1-1-1 Higashi, Tsukuba, Ibaraki 305-8561","c":"Tsukuba Station (Tsukuba Express) + bus","lat":36.0612124,"lng":140.1336975},"jaxa":{"n":"JAXA Tsukuba — Space Dome","d":"2-1-1 Sengen, Tsukuba, Ibaraki 305-8505","c":"Tsukuba Station + bus a Namiki 2-chome","lat":36.0681803,"lng":140.1304758},"meiji":{"n":"Meiji Jingu","d":"1-1 Yoyogikamizonocho, Shibuya-ku, Tokio 151-8557","c":"Harajuku (JR Yamanote) o Meiji-jingumae (Chiyoda)","lat":35.6763976,"lng":139.6993259},"takeshita":{"n":"Takeshita Street","d":"Takeshita St, 1-chome Jingumae, Shibuya-ku, Tokio 150-0001","c":"Harajuku Station, salida Takeshita, justo enfrente","lat":35.6710335,"lng":139.7051821},"shibuyasky":{"n":"Shibuya SKY","d":"2-24-12 Shibuya, Tokio 150-6145 — Scramble Square, pisos 14, 45, 46 y azotea","c":"Shibuya Station, conectado directo al edificio","lat":35.6586719,"lng":139.7019848},"daikoku":{"n":"Daikoku Parking Area","d":"15 Daikokufuto, Tsurumi-ku, Yokohama, Kanagawa 230-0054","c":"SIN acceso a pie ni en tren. Es un área de servicio sobre la autopista: solo se llega en el tour","lat":35.4619051,"lng":139.6805121},"toyota":{"n":"Toyota Commemorative Museum","d":"4-1-35 Noritakeshinmachi, Nishi-ku, Nagoya, Aichi 451-0051","c":"Sako Station (Meitetsu), 3 min a pie · o 25 min caminando desde Nagoya Station","lat":35.182564,"lng":136.8759846},"fushimi":{"n":"Fushimi Inari Taisha","d":"68 Fukakusa Yabunouchicho, Fushimi-ku, Kioto 612-0882","c":"Inari Station (JR Nara Line) o Fushimi-Inari (Keihan)","lat":34.9676945,"lng":135.7791876},"yasaka":{"n":"Santuario Yasaka (Gion)","d":"625 Gionmachi Kitagawa, Higashiyama-ku, Kioto 605-0073","c":"Gion-Shijo (Keihan) o Kawaramachi (Hankyu), 5 min a pie","lat":35.0036559,"lng":135.7785534},"pontocho":{"n":"Pontocho","d":"Pontocho-dori, Nakagyo-ku, Kioto 604-8012","c":"Gion-Shijo o Kawaramachi, 5 min a pie","lat":35.0064277,"lng":135.7712162},"kinkakuji":{"n":"Kinkaku-ji (Pabellón Dorado)","d":"1 Kinkakujicho, Kita-ku, Kioto 603-8361","c":"Bus 101 o 205 desde Kioto Station, parada Kinkakuji-michi","lat":35.03937,"lng":135.7292431},"osm":{"n":"Osaka Science Museum","d":"4-2-1 Nakanoshima, Kita-ku, Osaka 530-0005","c":"Higobashi Station (Yotsubashi Line), 7 min a pie","lat":34.691228,"lng":135.4915442},"dotonbori":{"n":"Dotonbori","d":"Dotonbori, Chuo-ku, Osaka 542-0071","c":"Namba o Nippombashi. Desde el hotel: 1 estación de Midosuji, o unos 20 min caminando","lat":34.6686471,"lng":135.5030983},"usj":{"n":"Universal Studios Japan","d":"2-1-33 Sakurajima, Konohana-ku, Osaka 554-0031","c":"Universal-City Station (JR Yumesaki Line), 5 min a pie","lat":34.6656768,"lng":135.4323185},"katsuoji":{"n":"Templo Katsuo-ji","d":"2914-1 Aomatani, Minoh, Osaka 562-8508","c":"Senri-Chuo (Midosuji) + bus Hankyu #29. El bus pasa ~1 vez por hora","lat":34.8657752,"lng":135.491087},"mrhiro":{"n":"Mr. Hiro Car Studio — Café","d":"4-12-21 Izuo, Taisho-ku, Osaka 551-0031","c":"Taisho Station (JR Loop Line) + 10 min en taxi o caminando","lat":34.6566761,"lng":135.4718702},"dendentown":{"n":"Nipponbashi Den Den Town","d":"4-9-9 Nipponbashi, Naniwa-ku, Osaka 556-0005","c":"Ebisucho o Nipponbashi. A unos 15 min caminando desde el hotel","lat":34.6604678,"lng":135.5061904},"hotel_tko":{"n":"Vessel Inn Asakusa Tsukuba Express","d":"1-15-1 Senzoku, Taito-ku, Tokio 111-0031","c":"Al lado de Asakusa Station y de la línea Tsukuba Express","lat":35.7184065,"lng":139.7923491},"hotel_kyo":{"n":"Framboise KYOTO Hotel de charme","d":"63-7 Higashikujo Higashigoryocho, Minami-ku, Kioto 601-8028","c":"Kujo Station, 10 min a pie · Kioto Station, 15 min","lat":34.9772784,"lng":135.7637482},"hotel_osa":{"n":"Dc桜の苑-難波店 (DC Sakura no Sono - Namba)","d":"1-9-13 Shikitsunishi, Naniwa-ku, Osaka 556-0015. Tel +81 70-2474-0704","c":"Daikokucho Station (Midosuji y Yotsubashi), 5 min a pie. Namba queda a 1 estación. Check-in 15:00, check-out 10:00","lat":34.6581365,"lng":135.4947904},"minoo":{"n":"Estación de Minoo (Hankyu)","d":"1-1 Minoo, Minoh, Osaka 562-0001","c":"Línea Hankyu Minoo desde Umeda, con transbordo. De ahí 15 min en taxi al templo","lat":34.8351674,"lng":135.4684598},"osakajo":{"n":"Castillo de Osaka","d":"1-1 Osakajo, Chuo-ku, Osaka 540-0002","c":"Osakajokoen (JR Loop Line) o Morinomiya. Desde Namba son ~15 min","lat":34.6872962,"lng":135.5258605},"narita":{"n":"Aeropuerto de Narita (NRT)","d":"1-1 Furugome, Narita, Chiba 282-0004","c":"Narita Express desde Tokyo Station, 1 h directa. También hay buses más baratos pero más lentos","lat":35.7719808,"lng":140.3928501},"kix":{"n":"Aeropuerto de Kansai (KIX)","d":"1 Senshukukokita, Izumisano, Osaka 549-0001","c":"Nankai Rapi:t (38 min) o JR Haruka (50 min) desde Namba","lat":34.4347479,"lng":135.2329761}},"D":[{"n":1,"f":"Jueves 10 de diciembre","z":"Tokio · Asakusa, Akihabara y Nihonbashi","r":"Llegada de madrugada. Día suave por el desfase horario: templo en la mañana y zonas techadas en la tarde.","ciudad":"tokio","iso":"2026-12-10"},{"n":2,"f":"Viernes 11 de diciembre","z":"Tsukuba · día científico","r":"Excursión de día completo a Tsukuba y, de regreso, Shibuya SKY al atardecer sin pasar por el hotel.","ciudad":"tsukuba","iso":"2026-12-11"},{"n":3,"f":"Sábado 12 de diciembre","z":"Harajuku, Shibuya y Yokohama","r":"Mañana en Harajuku y, desde las 16:00, el tour a Daikoku PA. Termina de noche.","ciudad":"tokio","iso":"2026-12-12"},{"n":4,"f":"Domingo 13 de diciembre","z":"Tokio → Nagoya → Kioto","r":"Día de traslado con escala en Nagoya para el Museo Toyota.","ciudad":"nagoya","iso":"2026-12-13"},{"n":5,"f":"Lunes 14 de diciembre","z":"Kioto Sur · Fushimi y Gion","r":"Madrugada en Fushimi, mediodía libre, Gion al atardecer.","ciudad":"kioto","iso":"2026-12-14"},{"n":6,"f":"Martes 15 de diciembre","z":"Kioto Norte · Kinkaku-ji","r":"Una sola actividad en la mañana. El resto del día queda libre.","ciudad":"kioto","iso":"2026-12-15"},{"n":7,"f":"Miércoles 16 de diciembre","z":"Kioto → Osaka","r":"Traslado corto a Osaka. Ciencia en la tarde, Dotonbori en la noche.","ciudad":"osaka","iso":"2026-12-16"},{"n":8,"f":"Jueves 17 de diciembre","z":"Osaka Bay · Universal Studios","r":"Día completo en el parque, de apertura a cierre.","ciudad":"osaka","iso":"2026-12-17"},{"n":9,"f":"Viernes 18 de diciembre","z":"Osaka Norte y Taisho","r":"Día largo y temprano: templo en la montaña al amanecer, castillo a mediodía, cultura JDM por la tarde y compras al final.","ciudad":"osaka","iso":"2026-12-18"},{"n":10,"f":"Sábado 19 de diciembre","z":"Osaka → Tokio → Narita · regreso","r":"Mañana tranquila en Osaka y después el traslado: shinkansen a Tokio y Narita Express. Salir del hotel a las 12:30 a más tardar.","ciudad":"osaka","iso":"2026-12-19"}],"P":[{"d":1,"h":"06:30 – 08:00","ini":"06:30","fin":"08:00","t":"Aterrizaje y trámites","x":"Migración, recoger equipaje, activar la eSIM y comprar las dos IC card en la máquina del aeropuerto. Calcular hora y media completa, no menos.","dur":"1.5 h","lugar":null},{"d":1,"h":"08:00 – 09:30","ini":"08:00","fin":"09:30","t":"Traslado al hotel","x":"Si llegan a Narita: Skyliner hasta Ueno y después Ginza Line. Si llegan a Haneda: Asakusa Line directo, sin transbordo.","dur":"1.5 h","lugar":"hotel_tko","desde":"hotel_tko"},{"d":1,"h":"09:30 – 10:00","ini":"09:30","fin":"10:00","t":"Dejar maletas","x":"El check-in es hasta las 15:00. El hotel guarda las maletas sin costo: dejarlas y salir ligeros.","dur":"30 min","lugar":"hotel_tko","desde":"hotel_tko"},{"d":1,"h":"10:00 – 12:00","ini":"10:00","fin":"12:00","t":"Senso-ji","x":"El templo budista más antiguo de Tokio, del año 645. Se entra por la puerta Kaminarimon con el farol rojo gigante, se cruza la calle Nakamise con sus puestos tradicionales y se llega al pabellón principal con la pagoda de cinco pisos. Al lado está el santuario Asakusa, mucho más tranquilo. Probar un ningyo-yaki recién hecho en Nakamise.","dur":"2 h","lugar":"sensoji","act":{"estado":"Gratis","reserva":"No necesita. Ir antes de las 9 am"},"desde":"hotel_tko"},{"d":1,"h":"12:00 – 12:45","ini":"12:00","fin":"12:45","t":"Comida en Asakusa","x":"Algo ligero cerca del templo. A esta hora el cuerpo todavía cree que es de madrugada.","dur":"1 h","lugar":null},{"d":1,"h":"12:45 – 13:15","ini":"12:45","fin":"13:15","t":"Traslado a Akihabara","x":"Una estación desde Asakusa.","dur":"30 min","lugar":null},{"d":1,"h":"13:15 – 14:30","ini":"13:15","fin":"14:30","t":"Akihabara","x":"El barrio de la electrónica, el anime y el gaming. Para componentes: Akizuki Denshi, Sengoku Denki y Marutsu, donde hay Arduino, Raspberry Pi, sensores y motores. Las mejores tiendas están en las callejuelas detrás de la avenida principal, no sobre ella. Super Potato tiene gaming retro y un arcade en el último piso. Llevar efectivo, varias tiendas chicas no aceptan tarjeta.","dur":"2 h","lugar":"akihabara","act":{"estado":"Por pagar","reserva":"No. El maid café tiene consumo mínimo ~¥1,500 c/u"},"desde":"sensoji"},{"d":1,"h":"14:30 – 15:00","ini":"14:30","fin":"15:00","t":"Traslado a Nihonbashi","x":"Dos estaciones desde Akihabara.","dur":"30 min","lugar":null},{"d":1,"h":"15:00 – 16:30","ini":"15:00","fin":"16:30","t":"Pokémon Café","x":"A dos estaciones, en el piso 5 del Takashimaya de Nihonbashi. OJO: son estrictos con la hora, hay reportes de gente a la que no dejaron entrar por llegar 9 minutos tarde. Llegar 15 minutos antes. El horario real depende de lo que confirme Klook.","dur":"1.5 h","lugar":"pokemoncafe","act":{"estado":"PAGADO (Klook)","reserva":"Pagado en Klook. Confirman 48 h antes — ESTIMADO, poner monto real"},"desde":"akihabara"},{"d":1,"h":"16:30 – 17:30","ini":"16:30","fin":"17:30","t":"Regreso y check-in","x":"Volver a Asakusa, recoger maletas y subir al cuarto.","dur":"1 h","lugar":"hotel_tko","desde":"pokemoncafe"},{"d":1,"h":"18:00 – 20:00","ini":"18:00","fin":"20:00","t":"Cena en Hoppy-dori","x":"Calle de izakayas al aire libre a 7 minutos del hotel. Ambiente local, barato y sin pretensiones. Después, a dormir temprano: la primera noche el desfase pega fuerte.","dur":"2 h","lugar":"hoppy","desde":"hotel_tko"},{"d":2,"h":"08:00 – 09:00","ini":"08:00","fin":"09:00","t":"Desayuno y salida","x":"Konbini y a la estación, que está al lado del hotel.","dur":"1 h","lugar":null},{"d":2,"h":"09:00 – 09:45","ini":"09:00","fin":"09:45","t":"Tsukuba Express a Tsukuba","x":"Directo, sin transbordos, 45 minutos.","dur":"45 min","lugar":null},{"d":2,"h":"10:00 – 11:00","ini":"10:00","fin":"11:00","t":"AIST-Cube","x":"La sala de exhibición del AIST, el instituto público de investigación industrial de Japón. Antes se llamaba Science Square Tsukuba; lo renombraron y reabrió en abril de 2025 con exhibiciones nuevas. Cuatro zonas donde muestran robótica, materiales avanzados y tecnología que todavía no llega al mercado. Recorrido libre, sin guía. La hora depende de la que les asignen al reservar.","dur":"1 h","lugar":"aist","act":{"estado":"Gratis","reserva":"SÍ, obligatoria. La ventana abre el 11 de noviembre"},"desde":"hotel_tko"},{"d":2,"h":"11:00 – 11:30","ini":"11:00","fin":"11:30","t":"Traslado a JAXA","x":"Bus local entre los dos centros, directo desde AIST-Cube.","dur":"30 min","lugar":null},{"d":2,"h":"11:30 – 13:30","ini":"11:30","fin":"13:30","t":"JAXA — Space Dome","x":"La agencia espacial japonesa. En el Space Dome hay satélites reales, motores de cohete y una maqueta a tamaño real del módulo Kibo de la Estación Espacial. Afuera, en el Rocket Square, está un cohete H-II real de 50 metros: ese es el punto de la foto. Entrada libre y gratis, sin reserva. Hay audioguía en inglés desde el celular.","dur":"2 h","lugar":"jaxa","act":{"estado":"Gratis","reserva":"No, sin tour guiado. Pero verificar el calendario de días abiertos"},"desde":"aist"},{"d":2,"h":"13:30 – 14:30","ini":"13:30","fin":"14:30","t":"Comida","x":"Saliendo de JAXA. Hay konbini cerca y la tienda Planet Cube en el mismo recinto.","dur":"1 h","lugar":null},{"d":2,"h":"14:30 – 15:50","ini":"14:30","fin":"15:50","t":"Regreso a Tokio, directo a Shibuya","x":"Tsukuba Express hasta Akihabara, que es donde termina la línea, y de ahí 25 minutos a Shibuya. No pasan por el hotel.","dur":"1h20","lugar":null},{"d":2,"h":"16:00 – 17:30","ini":"16:00","fin":"17:30","t":"Shibuya SKY","x":"Mirador a 229 metros con plataforma exterior abierta, la mejor vista panorámica de la ciudad. Está conectado directo con la estación. El celular va en locker en la zona Sky Edge. Llevar abrigo: arriba hace bastante más frío por el viento. El atardecer del 11 de diciembre es alrededor de las 16:28, así que un slot de 16:30 cae justo en la hora dorada.","dur":"1.5 h","lugar":"shibuyasky","act":{"estado":"Por pagar","reserva":"SÍ. Alarmas el 12 y el 26 de noviembre a las 9:00 am (para el 11 de dic)"},"desde":"jaxa"},{"d":2,"h":"17:30 – 19:00","ini":"17:30","fin":"19:00","t":"Cruce de Shibuya y tiempo libre","x":"Sin nada programado. Están en Shibuya, al pie del cruce.","dur":"1.5 h","lugar":null},{"d":2,"h":"19:00 – 21:00","ini":"19:00","fin":"21:00","t":"Cena","x":"En Shibuya o de regreso en Asakusa.","dur":"2 h","lugar":null},{"d":3,"h":"08:00 – 08:30","ini":"08:00","fin":"08:30","t":"Enviar las maletas a Kioto (takkyubin)","x":"ANTES de salir del hotel. En recepción del Vessel Inn piden el servicio de Yamato y mandan las maletas grandes al Framboise Kyoto. Cuesta unos ¥2,400 por maleta. Preguntar a recepción su hora de corte y CONFIRMAR que llegan el domingo 13, no el lunes 14. En la mochila de mano se quedan: pasaporte, medicinas, cargadores, power banks, cámara y una muda para el domingo.","dur":"30 min","lugar":"hotel_tko","desde":"hotel_tko"},{"d":3,"h":"08:30 – 09:30","ini":"08:30","fin":"09:30","t":"Traslado a Harajuku","x":"Ginza Line y después Yamanote.","dur":"1 h","lugar":null},{"d":3,"h":"09:30 – 11:00","ini":"09:30","fin":"11:00","t":"Meiji Jingu","x":"Santuario sintoísta dedicado al emperador Meiji, dentro de un bosque de 100,000 árboles donados de todo Japón. Sorprende el silencio estando justo al lado del caos de Harajuku. En sábado es común ver bodas tradicionales. Antes de entrar se lavan manos y boca en el temizuya, la fuente de piedra de la entrada.","dur":"1.5 h","lugar":"meiji","act":{"estado":"Gratis","reserva":"No necesita"},"desde":"hotel_tko"},{"d":3,"h":"11:00 – 12:30","ini":"11:00","fin":"12:30","t":"Takeshita Street","x":"Calle peatonal de 400 metros, el corazón de la moda kawaii: ropa, accesorios, crepes gigantes y merchandising. Está justo enfrente de la salida Takeshita de la estación. Probar un crepe en Marion Crepes o Santa Monica. Caminando 5 minutos se llega a Omotesando, que es el contraste total con tiendas de lujo.","dur":"1.5 h","lugar":"takeshita","act":{"estado":"Por pagar","reserva":"No necesita"},"desde":"meiji"},{"d":3,"h":"12:30 – 13:30","ini":"12:30","fin":"13:30","t":"Comida","x":"Temprano, porque el tour arranca a las 16:00.","dur":"1 h","lugar":null},{"d":3,"h":"13:30 – 15:30","ini":"13:30","fin":"15:30","t":"Tiempo libre","x":"Sin nada programado, antes de que los recojan.","dur":"2 h","lugar":null},{"d":3,"h":"15:30 – 16:00","ini":"15:30","fin":"16:00","t":"Punto de encuentro del tour","x":"Estar en el punto acordado con tiempo. Llevar abrigo grueso, gorro y guantes: en Daikoku pega el viento de la bahía.","dur":"30 min","lugar":null},{"d":3,"h":"16:00 – 22:00","ini":"16:00","fin":"22:00","t":"Tour a Daikoku PA","x":"Área de servicio sobre la autopista Bayshore, en Yokohama. Cada sábado por la noche se juntan Skylines GT-R, Supras, RX-7, kei trucks tuneados y VIP cars. Cultura JDM en vivo. Van de pasajeros, el tour los recoge y los regresa. Llevar yenes en monedas para las vending machines y mucha ropa de abrigo: frío y viento de bahía.","dur":"6 h","lugar":"daikoku","act":{"estado":"PAGADO","reserva":"Ya reservado. Tour de pasajero. Recogida a las 16:00"},"desde":"takeshita"},{"d":4,"h":"09:00 – 10:00","ini":"09:00","fin":"10:00","t":"Desayuno y check-out","x":"El límite es a las 11:00, pero conviene salir antes: el museo Toyota cierra a las 17:00 y el día no tiene holgura. Las maletas grandes ya van camino a Kioto desde ayer, así que solo cargan la mochila de mano.","dur":"1 h","lugar":"hotel_tko","desde":"hotel_tko"},{"d":4,"h":"10:00 – 10:45","ini":"10:00","fin":"10:45","t":"A Tokyo Station","x":"Con equipaje de mano nada más. Si por lo que sea una maleta se quedó, los lockers grandes de Tokyo Station cuestan ~¥800 pero NO sirven aquí: ya no regresan a Tokio. En ese caso habría que usar los lockers de la estación de Nagoya.","dur":"45 min","lugar":null},{"d":4,"h":"11:00 – 12:40","ini":"11:00","fin":"12:40","t":"Shinkansen a Nagoya","x":"Tren Hikari, 1 hora 40 minutos.","dur":"1h40","lugar":null},{"d":4,"h":"13:00 – 13:45","ini":"13:00","fin":"13:45","t":"Comida en Nagoya","x":"Cerca de la estación o dentro del museo.","dur":"45 min","lugar":null},{"d":4,"h":"14:00 – 17:00","ini":"14:00","fin":"17:00","t":"Museo Toyota","x":"Está en el edificio donde Toyota nació como fábrica textil, antes de hacer autos. Dos pabellones: el textil, con telares automáticos funcionando de verdad, y el automotriz, con una línea de producción real y prensas trabajando. Mucho más interactivo que el otro museo de Toyota que está a las afueras. Pedir la audioguía gratis y revisar el horario de los shows de máquinas al entrar. Cierra a las 17:00.","dur":"3 h","lugar":"toyota","act":{"estado":"Por pagar","reserva":"No. Se paga en taquilla. Cierra lunes"},"desde":"hotel_tko"},{"d":4,"h":"17:00 – 17:30","ini":"17:00","fin":"17:30","t":"Regreso a Nagoya Station","x":"Meitetsu desde Sako, 3 minutos, más la caminata. El museo cierra a las 17:00 en punto: salir a esa hora o antes.","dur":"30 min","lugar":null},{"d":4,"h":"17:45 – 18:20","ini":"17:45","fin":"18:20","t":"Shinkansen a Kioto","x":"35 minutos.","dur":"35 min","lugar":null},{"d":4,"h":"18:45 – 19:45","ini":"18:45","fin":"19:45","t":"Check-in en Kioto y recoger maletas","x":"Al hacer el check-in, pedir las maletas que llegaron por takkyubin. Suelen quedarse en recepción, no las suben al cuarto. Verificar que llegaron las dos antes de instalarse.","dur":"1 h","lugar":"hotel_kyo","desde":"toyota"},{"d":4,"h":"19:45 – 21:00","ini":"19:45","fin":"21:00","t":"Cena ligera","x":"Cerca del hotel, sin complicarse.","dur":"1.5 h","lugar":null},{"d":5,"h":"07:00 – 07:45","ini":"07:00","fin":"07:45","t":"Salida temprano","x":"Konbini y JR Nara Line.","dur":"45 min","lugar":null},{"d":5,"h":"08:00 – 10:30","ini":"08:00","fin":"10:30","t":"Fushimi Inari Taisha","x":"El santuario más fotografiado de Japón: 10,000 toriis rojos formando túneles que suben la montaña Inari. Está dedicado a Inari, deidad del arroz, y los zorros son sus mensajeros. Subir al menos hasta Yotsutsuji, el mirador con vista de Kioto, que son unos 45 minutos de escaleras. Llegar antes de las 8 es la diferencia entre caminar solo y caminar entre multitudes.","dur":"2.5 h","lugar":"fushimi","act":{"estado":"Gratis","reserva":"No necesita. Ir antes de las 8 am"},"desde":"hotel_kyo"},{"d":5,"h":"10:30 – 11:30","ini":"10:30","fin":"11:30","t":"Kitsune udon","x":"En los puestos del camino de bajada. Es udon con tofu frito, el platillo asociado a los zorros del santuario.","dur":"1 h","lugar":null},{"d":5,"h":"12:00 – 15:00","ini":"12:00","fin":"15:00","t":"Tiempo libre","x":"Sin nada programado.","dur":"3 h","lugar":null},{"d":5,"h":"15:00 – 16:00","ini":"15:00","fin":"16:00","t":"Traslado a Gion","x":"Línea Keihan de Fushimi-Inari a Gion-Shijo, 12 minutos.","dur":"1 h","lugar":null},{"d":5,"h":"16:00 – 17:30","ini":"16:00","fin":"17:30","t":"Santuario Yasaka","x":"Santuario sintoísta del siglo VII, el corazón espiritual de Gion. Al anochecer encienden cientos de faroles y el ambiente cambia por completo. Al lado está el parque Maruyama.","dur":"1.5 h","lugar":"yasaka","act":{"estado":"Gratis","reserva":"No necesita. Ir al atardecer"},"desde":"fushimi"},{"d":5,"h":"17:30 – 19:00","ini":"17:30","fin":"19:00","t":"Hanamikoji y Shirakawa","x":"Las dos calles más bonitas de Gion, con casas de té de madera. Si ven una maiko o una geiko, nada de perseguirlas ni bloquearles el paso: hay multas por acoso turístico y van en serio.","dur":"1.5 h","lugar":null},{"d":5,"h":"19:00 – 21:00","ini":"19:00","fin":"21:00","t":"Cena en Pontocho","x":"Callejón angosto junto al río, lleno de restaurantes con farolitos. Una de las dos cenas especiales del viaje.","dur":"2 h","lugar":"pontocho","desde":"yasaka"},{"d":6,"h":"08:00 – 09:00","ini":"08:00","fin":"09:00","t":"Bus a Kinkaku-ji","x":"Bus 101 o 205 desde Kioto Station, unos 40 minutos.","dur":"1 h","lugar":null},{"d":6,"h":"09:00 – 10:00","ini":"09:00","fin":"10:00","t":"Kinkaku-ji","x":"El Pabellón Dorado: un templo zen cubierto en pan de oro que se refleja en un estanque. Probablemente la imagen más icónica de Kioto. El recorrido es de una sola dirección por un camino fijo. Con el frío de diciembre existe la posibilidad de verlo con algo de nieve en el techo. La entrada se paga EN EFECTIVO.","dur":"1 h","lugar":"kinkakuji","act":{"estado":"Por pagar","reserva":"No. Se paga EN EFECTIVO en la puerta"},"desde":"hotel_kyo"},{"d":6,"h":"10:00 – 11:30","ini":"10:00","fin":"11:30","t":"Tiempo libre","x":"Sin nada programado.","dur":"1.5 h","lugar":null},{"d":6,"h":"11:30 – 12:30","ini":"11:30","fin":"12:30","t":"Comida","x":"Por la zona o de regreso al centro.","dur":"1 h","lugar":null},{"d":6,"h":"13:00 – 19:00","ini":"13:00","fin":"19:00","t":"Tiempo libre","x":"Sin nada programado.","dur":"6 h","lugar":null},{"d":6,"h":"19:00 – 21:00","ini":"19:00","fin":"21:00","t":"Cena","x":"En el centro de Kioto.","dur":"2 h","lugar":null},{"d":7,"h":"09:00 – 10:15","ini":"09:00","fin":"10:15","t":"Mañana tranquila en Kioto","x":"Última vuelta por el barrio antes de dejar la ciudad.","dur":"1h15","lugar":null},{"d":7,"h":"10:15 – 11:00","ini":"10:15","fin":"11:00","t":"Check-out","x":"LÍMITE 11:00 en punto. Salida del hotel de Kioto con las maletas.","dur":"45 min","lugar":"hotel_kyo","desde":"hotel_kyo"},{"d":7,"h":"11:15 – 12:15","ini":"11:15","fin":"12:15","t":"Tren a Osaka","x":"Al Kioto Station y de ahí JR rápido, 30 minutos.","dur":"1 h","lugar":null},{"d":7,"h":"12:30 – 13:00","ini":"12:30","fin":"13:00","t":"Dejar maletas en el hotel","x":"OJO: el check-in es hasta las 15:00, no antes. Llegan, dejan maletas y salen. El hotel está en Shikitsunishi, a 5 minutos a pie de Daikokucho, que es una estación al sur de Namba.","dur":"30 min","lugar":"hotel_osa","desde":"hotel_kyo"},{"d":7,"h":"13:00 – 14:30","ini":"13:00","fin":"14:30","t":"Comida y traslado al museo","x":"Yotsubashi Line directa de Daikokucho a Higobashi, sin transbordo.","dur":"1 h","lugar":null},{"d":7,"h":"14:30 – 17:00","ini":"14:30","fin":"17:00","t":"Osaka Science Museum","x":"Museo con tema de universo y energía: cuatro plantas y unas 200 exhibiciones interactivas de electromagnetismo, mecánica, química y astrofísica. Hay demostraciones en vivo varias veces al día. El edificio es donde Hideki Yukawa desarrolló la teoría de los mesones, que le dio el Nobel en 1949. El planetario, de 26.5 metros, es de los más grandes de Japón: reservar la función al llegar. La entrada son ¥400 y el planetario ¥600 aparte.","dur":"2.5 h","lugar":"osm","act":{"estado":"Por pagar","reserva":"No. ¥400 exhibición + ¥600 planetario. CIERRA LUNES Y MARTES"},"desde":"hotel_osa"},{"d":7,"h":"17:30 – 19:00","ini":"17:30","fin":"19:00","t":"Check-in y descanso","x":"Volver al hotel, hacer el check-in y recargar pilas.","dur":"1.5 h","lugar":"hotel_osa","desde":"osm"},{"d":7,"h":"19:00 – 22:00","ini":"19:00","fin":"22:00","t":"Dotonbori y cena","x":"La calle peatonal sobre el canal, centro nocturno de Osaka. Desde el hotel es una estación de metro o unos 20 minutos caminando. Letreros gigantes: el Glico Running Man, el cangrejo de Kani Doraku y el pez globo de Zuboraya. La foto con el Glico se toma desde el puente Ebisubashi. Imprescindibles: takoyaki en Wanaka, okonomiyaki en Mizuno y kushikatsu en Daruma, donde la regla sagrada es no mojar dos veces en la salsa. La calle paralela Hozenji Yokocho es mucho más tradicional y tranquila.","dur":"3 h","lugar":"dotonbori","act":{"estado":"Gratis","reserva":"No necesita. La cena va en el presupuesto de comidas"},"desde":"hotel_osa"},{"d":8,"h":"07:30 – 08:30","ini":"07:30","fin":"08:30","t":"Desayuno y traslado","x":"JR Yumesaki Line hasta Universal-City.","dur":"1 h","lugar":null},{"d":8,"h":"08:30 – 09:00","ini":"08:30","fin":"09:00","t":"Llegada antes de abrir","x":"Estar en la puerta 30 o 45 minutos antes de la apertura.","dur":"30 min","lugar":null},{"d":8,"h":"09:00 – 21:00","ini":"09:00","fin":"21:00","t":"Universal Studios Japan","x":"Lo PRIMERO al cruzar la entrada: abrir la app de USJ y activar el Area Timed Entry de Super Nintendo World, porque se acaba en una o dos horas. Después, con el Express Pass ya comprado, el resto del día se acomoda solo. Las zonas fuertes son Super Nintendo World con Mario Kart en realidad aumentada, el Wizarding World de Harry Potter con Hogwarts a tamaño real, Jurassic Park y Minions. En diciembre todo está decorado con luces y el árbol gigante navideño.","dur":"12 h","lugar":"usj","act":{"estado":"PAGADO","reserva":"Ya reservado, pase + Express"},"desde":"hotel_osa"},{"d":8,"h":"21:30 – 22:00","ini":"21:30","fin":"22:00","t":"Regreso al hotel","x":"De vuelta a Namba.","dur":"30 min","lugar":null},{"d":9,"h":"06:45 – 07:45","ini":"06:45","fin":"07:45","t":"Salida temprano hacia Minoo","x":"Midosuji de Daikokucho a Umeda y de ahí la línea Hankyu hasta Minoo. Desayuno de konbini en el camino. Madrugar es lo que hace que todo el día funcione.","dur":"1 h","lugar":"minoo","desde":"hotel_osa"},{"d":9,"h":"07:45 – 08:00","ini":"07:45","fin":"08:00","t":"Taxi hasta el templo","x":"Quince minutos subiendo el cerro desde la estación. Cuesta unos miles de yenes, pero los libera del bus Hankyu #29, que pasa una sola vez por hora y les amarraría el día entero.","dur":"15 min","lugar":null},{"d":9,"h":"08:00 – 10:00","ini":"08:00","fin":"10:00","t":"Templo Katsuo-ji","x":"Llegan justo a la hora de apertura, con la montaña prácticamente vacía y la mejor luz del día. Templo budista del siglo VIII conocido como el templo de las victorias: aquí viene la gente a pedir por exámenes, competencias y negocios. Está cubierto de miles de muñecas daruma rojas escondidas entre las rocas, en los escalones, bajo los árboles y sobre los faroles — cada una es un deseo que ya se cumplió. Comprar un daruma chico cuesta entre ¥500 y ¥1,500 y es el mejor souvenir del viaje.","dur":"2 h","lugar":"katsuoji","act":{"estado":"Por pagar","reserva":"No. Entrada ~¥500 + daruma de souvenir"},"desde":"minoo"},{"d":9,"h":"10:00 – 11:30","ini":"10:00","fin":"11:30","t":"Regreso hacia el centro","x":"Taxi de vuelta a Minoo y tren directo al castillo, sin pasar por el hotel.","dur":"1h30","lugar":null},{"d":9,"h":"11:30 – 13:00","ini":"11:30","fin":"13:00","t":"Castillo de Osaka","x":"El símbolo de la ciudad, con su foso de piedra y el parque alrededor. Ojo con la expectativa: la torre que ven es una reconstrucción de concreto de 1931, con elevador adentro y un museo de historia en los pisos. Lo mejor es el exterior, el foso y los muros originales, que son gratis. Si solo quieren la foto y caminar el parque, no hace falta pagar la torre.","dur":"1h30","lugar":"osakajo","act":{"estado":"Por pagar","reserva":"No. Se puede comprar en línea y saltarse la fila. El parque y el foso son gratis"},"desde":"katsuoji"},{"d":9,"h":"13:00 – 14:00","ini":"13:00","fin":"14:00","t":"Comida","x":"Por la zona del castillo o camino a Taisho.","dur":"1 h","lugar":null},{"d":9,"h":"14:30 – 16:30","ini":"14:30","fin":"16:30","t":"Mr. Hiro Car Studio — Café","x":"Centro de cultura JDM en Taisho-ku. Tienen AE86, RX-7 FC y FD, Skyline GT-R R32, Supra MK4, NSX y Silvia S15. Van solo al café: se entra, se ven los autos y se pueden tomar sus propias fotos sin pagar sesión. Si al llegar les antoja el simulador o el drift kart eléctrico, eso se contrata ahí mismo. Si les gusta Initial D, pregunten por las réplicas del anime. Abren todos los días de 9:00 a 19:00.","dur":"2 h","lugar":"mrhiro","act":{"estado":"Por pagar","reserva":"No necesita. Solo el café, sin renta ni sesión de fotos"},"desde":"osakajo"},{"d":9,"h":"16:30 – 17:15","ini":"16:30","fin":"17:15","t":"Regreso a Namba","x":"JR Loop Line desde Taisho.","dur":"45 min","lugar":null},{"d":9,"h":"17:15 – 19:00","ini":"17:15","fin":"19:00","t":"Den Den Town","x":"El Akihabara de Osaka: electrónica, anime, figuras y componentes. Se movió aquí porque el sábado ya no hay mañana libre. Las tiendas cierran a las 19:00, así que no se entretengan en el camino. Para el tax-free hay que llevar el pasaporte físico y gastar mínimo ¥5,000 en la misma tienda el mismo día.","dur":"1h45","lugar":"dendentown","act":{"estado":"Gratis","reserva":"No necesita. Llevar pasaporte para el tax-free"},"desde":"mrhiro"},{"d":9,"h":"19:00 – 21:00","ini":"19:00","fin":"21:00","t":"Cena","x":"Por Namba o Dotonbori, que quedan al lado.","dur":"2 h","lugar":null},{"d":10,"h":"09:00 – 10:00","ini":"09:00","fin":"10:00","t":"Desayuno","x":"Sin prisa: hoy no salen hasta el mediodía.","dur":"1 h","lugar":null},{"d":10,"h":"10:00 – 11:00","ini":"10:00","fin":"11:00","t":"Check-out y maletas","x":"El check-out es a las 10:00 en punto. El hotel puede guardarles las maletas un rato si quieren salir ligeros.","dur":"1 h","lugar":"hotel_osa","desde":"hotel_osa"},{"d":10,"h":"11:00 – 12:30","ini":"11:00","fin":"12:30","t":"Tiempo libre en Osaka","x":"Hora y media de margen antes de arrancar. Si quedó algo pendiente en Den Den Town, abre a las 11:00 y está a 15 minutos a pie.","dur":"1h30","lugar":null},{"d":10,"h":"12:30 – 13:10","ini":"12:30","fin":"13:10","t":"Metro a Shin-Osaka","x":"Línea Midosuji directa desde Daikokucho, sin transbordos. Llegar con margen para recoger o comprar los boletos.","dur":"40 min","lugar":null},{"d":10,"h":"13:30 – 16:00","ini":"13:30","fin":"16:00","t":"Shinkansen Nozomi a Tokio","x":"Dos horas y media. RESERVAR CON ANTICIPACIÓN: es sábado de diciembre y van con maletas. Si alguna maleta pasa de 160 cm sumando alto, ancho y largo, hay que pedir asiento con espacio para equipaje grande — gratis al reservar, ¥1,000 de multa si no se avisa.","dur":"2h30","lugar":null},{"d":10,"h":"16:00 – 16:30","ini":"16:00","fin":"16:30","t":"Transbordo en Tokyo Station","x":"Del andén del shinkansen al del Narita Express. La estación es enorme: seguir los letreros de N'EX desde que bajan.","dur":"30 min","lugar":null},{"d":10,"h":"16:30 – 17:30","ini":"16:30","fin":"17:30","t":"Narita Express al aeropuerto","x":"Una hora directa hasta Narita Terminal 1.","dur":"1 h","lugar":"narita","desde":"hotel_osa"},{"d":10,"h":"17:30 – 20:40","ini":"17:30","fin":"20:40","t":"Aeropuerto de Narita T1","x":"Tres horas antes del vuelo. Documentar, reembolso tax-free si aplica y los últimos KitKats raros.","dur":"3h10","lugar":"narita","desde":"narita"},{"d":10,"h":"20:40","ini":"20:40","fin":"","t":"Despegue","x":"KE 0714 a Seúl y después AM 0091 a México. Llegada a CDMX el domingo 20 a las 10:35.","dur":"—","lugar":null}],"R":[{"p":"LISTO","q":"Universal Studios Japan + Express Pass ×2","dd":"usj.co.jp","c":"Ya reservado","e":"LISTO","link":""},{"p":"LISTO","q":"Tour Daikoku PA ×2 (de pasajero)","dd":"Klook / GetYourGuide","c":"Ya reservado","e":"LISTO","link":""},{"p":"LISTO","q":"Check-in del hotel de Tokio corregido al 10 dic","dd":"Confirmación del hotel","c":"Ya corregido","e":"LISTO","link":""},{"p":"LISTO","q":"Seguro de viaje ×2","dd":"—","c":"Ya contratado","e":"LISTO","link":""},{"p":"EN ESPERA","q":"Pokémon Café ×2","dd":"Klook","c":"Pagado. Confirman o no 48 h antes, o sea el 8 dic","e":"EN ESPERA","link":""},{"p":"URGENTE","q":"AIST-Cube ×2","dd":"forms.office.com/r/QdazR3NTBk","c":"La ventana abre el MIÉ 11 DE NOVIEMBRE","e":"PENDIENTE","link":"https://forms.office.com/r/QdazR3NTBk"},{"p":"URGENTE","q":"Shibuya SKY ×2, slot 16:30 del VIE 11 DIC","dd":"shibuya-scramble-square.com/sky/ticket","c":"Alarmas: JUE 12 y JUE 26 DE NOV, 9:00 am","e":"PENDIENTE","link":""},{"p":"LISTO","q":"2 eSIM Holafly regional Asia","dd":"holafly.com","c":"Ya compradas","e":"LISTO","link":""},{"p":"PENDIENTE","q":"Preguntar en el hotel de Tokio por el takkyubin","dd":"Recepción del Vessel Inn Asakusa","c":"Al hacer check-in el 10 dic: confirmar hora de corte y que entregan en Kioto el 13","e":"PENDIENTE","link":""},{"p":"VERIFICAR","q":"Calendario de días abiertos de JAXA","dd":"Calendario de Google de JAXA","c":"Revisar que el 11 dic no sea día de mantenimiento","e":"PENDIENTE","link":"https://calendar.google.com/calendar/u/0/embed?src=10ktsv0plsltccu5rasjl6rt5o%40group.calendar.google.com&ctz=Asia%2FTokyo"},{"p":"LISTO","q":"Dirección del hotel de Osaka","dd":"1-9-13 Shikitsunishi, Naniwa-ku. Tel +81 70-2474-0704","c":"Ya confirmada","e":"LISTO","link":""},{"p":"NO APLICA","q":"Permiso Internacional de Conducir","dd":"SCT México","c":"NO se necesita: en Daikoku van de pasajeros y en Mr. Hiro solo al café","e":"NO APLICA","link":""}],"G":[{"t":"Shinkansen","x":"El tren bala. Puntual al segundo. Los boletos se compran en la estación o en smart-ex.jp; no hace falta con meses de anticipación."},{"t":"IC card","x":"Tarjeta recargable de transporte: Suica y Pasmo en Tokio, ICOCA en Osaka, pero las tres funcionan en todo el país. Sirve también para pagar en konbinis y máquinas expendedoras."},{"t":"Konbini","x":"Tienda de conveniencia abierta 24/7: 7-Eleven, Lawson, FamilyMart. Comida de verdad buena y barata, cajeros que aceptan tarjetas mexicanas, baños limpios y Wi-Fi gratis."},{"t":"Izakaya","x":"Bar-restaurante japonés de platillos pequeños para compartir. El equivalente a una cantina con botana."},{"t":"Torii","x":"La puerta de madera o piedra que marca la entrada a un santuario sintoísta. En Fushimi Inari hay diez mil formando túneles."},{"t":"Temizuya","x":"Fuente de piedra en la entrada de los santuarios. Antes de entrar se enjuagan manos y boca con el cucharón."},{"t":"Daruma","x":"Muñeca roja redonda de la suerte. Se compra con los dos ojos en blanco, se pinta uno al pedir un deseo y el otro cuando se cumple."},{"t":"Maiko y geiko","x":"Aprendiz y maestra del arte tradicional de entretenimiento en Kioto. Geisha es el término de Tokio; en Kioto se dice geiko."},{"t":"JDM","x":"Japanese Domestic Market. Los autos fabricados para venderse solo en Japón: Skyline GT-R, RX-7, AE86, Supra."},{"t":"PA","x":"Parking Area. Área de servicio en la autopista. Daikoku PA es la más famosa del mundo por las reuniones de autos."},{"t":"Tax-free","x":"Devolución del impuesto para turistas. Se necesita el pasaporte físico y normalmente gastar mínimo ¥5,000 en la misma tienda el mismo día."},{"t":"Takoyaki","x":"Bolitas de masa rellenas de pulpo, especialidad de Osaka. Salen hirviendo por dentro: esperar."},{"t":"Okonomiyaki","x":"Algo entre tortita y pizza, de col y masa, con la salsa dulce encima. También muy de Osaka."},{"t":"Kushikatsu","x":"Brochetas empanizadas y fritas. Regla absoluta: la salsa comunitaria se moja UNA sola vez por brocheta."},{"t":"Kitsune udon","x":"Sopa de fideos udon con tofu frito. Kitsune significa zorro, el animal mensajero de Inari."},{"t":"Ningyo-yaki","x":"Pastelito relleno de pasta de frijol dulce, típico de la calle Nakamise en Asakusa."},{"t":"Nakamise","x":"La calle de puestos tradicionales que lleva de la puerta Kaminarimon al templo Senso-ji."},{"t":"Takuhaibin","x":"Servicio de mensajería de equipaje, normalmente de Yamato. Mandan la maleta de hotel a hotel por unos ¥2,000 para no cargarla en el shinkansen."}],"N":[{"t":"Tus vuelos y cuándo abre el check-in","x":"IDA: AM 0058, martes 8 de diciembre 21:45 desde CDMX T2, llega a Tokio-Narita T1 el jueves 10 a las 06:30 (16h29m). VUELTA: sábado 19 a las 20:40 desde Narita T1, con KE 0714 (Korean Air) a Seúl y AM 0091 a CDMX; llega el domingo 20 a las 10:35. El check-in abre 24 horas antes: lunes 7 de diciembre a las 21:45 para la ida, y viernes 18 a las 20:40 para la vuelta. Poner alarma a esas horas exactas: es cuando se liberan los asientos que estaban bloqueados."},{"t":"Clima en diciembre","x":"Frío seco. De 4 a 12 °C de día y de 0 a 5 °C de noche en las tres ciudades. Casi no llueve. Van con capas, abrigo, guantes y bufanda. En Shibuya SKY y en Daikoku PA hace bastante más frío por el viento."},{"t":"Efectivo","x":"Japón todavía usa muchísimo el efectivo. Los cajeros de 7-Eleven y Japan Post sí aceptan tarjetas mexicanas. Traer siempre entre ¥20,000 y ¥30,000 encima. Kinkaku-ji y el tour guiado de JAXA son solo efectivo."},{"t":"Enchufes","x":"Japón usa el mismo enchufe plano de dos patas que México, así que no hace falta adaptador. La diferencia es el voltaje: allá son 100V y aquí 127V. Revisar que los cargadores digan 100–240V en la letra chiquita."},{"t":"Equipaje entre ciudades","x":"Tokio→Kioto va por takkyubin de Yamato: se entrega en recepción el sábado 12 y llega al hotel de Kioto el domingo 13, unos ¥2,400 por maleta. Es lo que permite bajarse en Nagoya sin cargar nada. Tokio-Kioto es entrega AL DÍA SIGUIENTE, no el mismo día, así que hay que confirmar la fecha con recepción. Nunca mandar pasaporte, medicinas, cámara, laptop, efectivo ni power banks: esos van en la mochila de mano. Kioto→Osaka es traslado directo, ahí las maletas viajan con ustedes."},{"t":"Si falla el takkyubin","x":"Plan B para el domingo 13: lockers en la estación de Nagoya. Los grandes cuestan ¥800 y los bancos más surtidos están en la salida Sakura-dori (~360), Hirokoji (~450) y la terminal de autobuses (~280). Ojo: se llenan desde las 11 de la mañana y los grandes son los primeros en irse. Alternativa con lugar garantizado: reservar ecbo cloak en línea, ~¥800 por maleta."},{"t":"Idioma","x":"Google Translate con cámara resuelve los menús. Tres frases que sirven todo el viaje: arigatou gozaimasu (gracias), sumimasen (perdón o disculpe) y kore kudasai (esto, por favor)."},{"t":"Modales","x":"No comer caminando, no hablar fuerte en el tren, no sonarse la nariz en público y quitarse los zapatos cuando se indique. En Gion hay multas por acosar a maikos y geikos."},{"t":"Propinas","x":"No se dan. Dejar propina en Japón es de mala educación, no un detalle."},{"t":"Apps","x":"Google Maps, la IC card en Apple Wallet, Google Translate descargado para usar sin internet, la app de USJ y NAVITIME for Japan Travel."},{"t":"Dónde está el hotel de Osaka","x":"No está en Namba a pesar del nombre: está en Shikitsunishi, Naniwa-ku, a 5 minutos a pie de la estación Daikokucho. Es una estación al sur de Namba por la línea Midosuji. A Dotonbori son 20 minutos caminando o una estación de metro. Ventaja: Daikokucho tiene Midosuji Y Yotsubashi, así que el museo de ciencia y Katsuo-ji quedan en línea directa. Check-in 15:00, check-out 10:00."},{"t":"Horarios de los hoteles","x":"Tokio: check-out 11:00. Kioto: check-out 11:00. Osaka: check-in 15:00 y check-out 10:00. El de Osaka es el más estricto y el único con check-in tardío: el miércoles 16 hay que dejar maletas y volver después de las 15:00."},{"t":"Por qué taxi y no el bus a Katsuo-ji","x":"El bus Hankyu #29 desde Senri-Chuo cuesta ¥800 por persona cada trayecto, pero pasa solo una vez por hora y los horarios de diciembre de 2026 todavía no están publicados. El taxi desde la estación de Minoo son 15 minutos y unos ¥3,000 por viaje entre los dos: sale más caro, pero permite llegar a las 8:00 en punto, cuando el templo abre y está vacío, y deja libre toda la tarde. Si prefieren el bus, revisen el horario de regreso APENAS lleguen al templo."},{"t":"El regreso sale de Narita, no de Osaka","x":"El vuelo de vuelta despega de Narita (Tokio) a las 20:40, así que el sábado 19 hay que cruzar medio Japón de regreso. Shinkansen Shin-Osaka a Tokio (2h30) y después el Narita Express (1 h). Son unos ¥18,000 por persona que conviene reservar con semanas de anticipación: es sábado y en temporada alta. Por eso las compras de Den Den Town se movieron al viernes 18 por la tarde."},{"t":"Días de cierre a cuidar","x":"Museo Toyota cierra lunes, por eso va en domingo. Osaka Science Museum cierra lunes Y martes, por eso va en miércoles. AIST-Cube cierra lunes. JAXA cierra en días irregulares: hay que revisar su calendario."}],"F":[{"j":"Arigatō gozaimasu","p":"a-ri-GA-to go-zai-MASS","e":"Gracias (formal)"},{"j":"Sumimasen","p":"su-mi-MA-sen","e":"Perdón / disculpe / con permiso"},{"j":"Kore kudasai","p":"KO-re ku-da-SAI","e":"Esto, por favor"},{"j":"Onegaishimasu","p":"o-ne-GAI-shi-mass","e":"Por favor / se lo encargo"},{"j":"Eigo no menyū arimasu ka","p":"EI-go no ME-nyu a-ri-MASS ka","e":"¿Tienen menú en inglés?"},{"j":"Toire wa doko desu ka","p":"TOI-re wa DO-ko dess ka","e":"¿Dónde está el baño?"},{"j":"Ikura desu ka","p":"i-KU-ra dess ka","e":"¿Cuánto cuesta?"},{"j":"Daijōbu desu","p":"dai-JO-bu dess","e":"Está bien / no gracias"},{"j":"Wakarimasen","p":"wa-ka-ri-MA-sen","e":"No entiendo"},{"j":"Gochisōsama deshita","p":"go-chi-SO-sa-ma desh-ta","e":"Gracias por la comida (al salir)"}],"EQ":[{"t":"CDMX → Narita","s":"AM 0058 · Aeroméxico","x":"Las tres piezas: accesorio personal, maleta de mano y una documentada de 25 kg. Confirmado por el asesor de Aeroméxico. Aun así, revisen la línea de franquicia del e-ticket, porque la tarifa es Básica y ahí es donde recortan."},{"t":"Narita → Incheon","s":"KE 0714 · Korean Air","x":"El tramo con la restricción. Korean Air publica que la maleta de mano es gratis en todas sus tarifas, pero el límite de economy es 10 kg COMBINADOS entre la de mano y el accesorio personal. Verificarlo directo con Korean Air usando el localizador CQLDC6."},{"t":"Incheon → CDMX","s":"AM 0091 · Aeroméxico","x":"Las tres piezas otra vez, igual que la ida."},{"t":"Lo que no se puede olvidar","s":"Durante las 12 h en Seúl","x":"Lo que documenten en Narita no lo vuelven a ver hasta México. Muda, aseo, cargadores y medicinas tienen que ir en las piezas de cabina, dentro de esos 10 kg."},{"t":"Para las compras","s":"Akihabara y Den Den Town","x":"Lo denso y resistente va en la documentada, que aguanta 25 kg. Lo frágil, en cabina. Si se pasan, mandar las compras por Japan Post desde Japón suele salir más barato que pagar exceso en el aeropuerto. Truco: llevar una bolsa plegable de ida para consolidar todo de regreso sin pagar pieza extra."}],"SE":[{"t":"Dormir en el aeropuerto","tag":"recomendada","x":"Incheon está hecho para esto. No pasan migración, no cargan maletas si van facturadas, y llegan al vuelo de catorce horas habiendo dormido.","li":["Gratis: zonas de descanso con sillones reclinables en T2, cerca de las puertas 231 y 268. Se llenan hacia medianoche, así que hay que ir directo al bajar.","Barato: Spa on Air, desde ~₩20,000. Baños coreanos y zonas para dormir. Hay sucursal en T2.","Cómodo: Darakhyu, el hotel cápsula de Walkerhill, desde ~₩62,000 la noche. Los bloques nocturnos arrancan a las 20:00 y se agotan rápido."]},{"t":"Hotel junto al aeropuerto","tag":"alternativa","x":"Cama normal, regadera y desayuno. La contra es pasar migración de ida y volver a pasar seguridad en la mañana, con riesgo de fila a esa hora.","li":["Desde ~₩100,000 la noche.","Por una noche de 7 horas efectivas, la diferencia contra la cápsula no siempre se justifica."]},{"t":"Salir a Seúl de madrugada","tag":"no recomendada","x":"Sobre el papel alcanza, pero los horarios no ayudan. Salen de migración cerca de las 23:40 y el último AREX pasa alrededor de medianoche. Si lo alcanzan, llegan a Seúl pasada la una con todo cerrado salvo las zonas de vida nocturna, y hay que estar de regreso antes de las 09:10.","li":["AREX expreso: T2 a Seoul Station en 51 min, ₩13,000 por persona.","El guarda-equipaje cierra entre 22:00 y 23:00.","Resultado: cero horas de sueño antes de un vuelo de catorce horas."]},{"t":"Transit tour gratis del aeropuerto","tag":"no aplica","x":"Incheon ofrece recorridos gratuitos de 1 a 6 horas a templos, la ciudad de Incheon y Seúl, pensados exactamente para escalas como esta.","li":["El problema es el horario: corren de día y hay que estar de vuelta a las 09:10.","No hay ventana donde encajen. Vale tenerlo en mente para un viaje futuro."]}],"VU":[{"cod":"AM 0058","ln":"Aeroméxico","de":"Ciudad de México T2","a":"Tokio – Narita T1","sale":"mar 8 dic · 21:45","llega":"jue 10 dic · 06:30","dur":"17 h 45 min","nota":"Directo con una parada técnica de ~1 h 16 min en Puerto Vallarta. No se baja nadie del avión.","asiento":"21G","checkin":"2026-12-07T21:45:00-06:00","checkinTxt":"lun 7 dic · 21:45 (hora de México)"},{"cod":"KE 0714","ln":"Korean Air","de":"Tokio – Narita T1","a":"Seúl – Incheon","sale":"sáb 19 dic · 20:40","llega":"sáb 19 dic · ~23:05","dur":"~2 h 25 min","nota":"Localizador propio: CQLDC6. Los asientos de este tramo se manejan con Korean Air, no con Aeroméxico.","asiento":"38B","checkin":"","checkinTxt":""},{"cod":"AM 0091","ln":"Aeroméxico","de":"Seúl – Incheon","a":"Ciudad de México T2","sale":"dom 20 dic · 11:40","llega":"dom 20 dic · 10:35","dur":"~13 h 55 min","nota":"Llega el mismo día por el cambio de huso horario. Entre el KE 0714 y este vuelo hay unas 12 h 35 min de escala.","asiento":"31G","checkin":"2026-12-18T20:40:00+09:00","checkinTxt":"vie 18 dic · 20:40 (hora de Japón)"}],"FE":[{"t":"Reservar AIST-Cube","iso":"2026-11-11T00:00:00-06:00","txt":"mié 11 de noviembre","x":"Abre la ventana de reserva, un mes exacto antes. No se puede antes.","link":"https://forms.office.com/r/QdazR3NTBk"},{"t":"Shibuya SKY · primera alarma","iso":"2026-11-12T09:00:00-06:00","txt":"jue 12 de noviembre, 9:00 am","x":"Posible apertura para el 11 de diciembre, si la ventana es de 28 días.","link":"https://www.shibuya-scramble-square.com/sky/ticket"},{"t":"Shibuya SKY · segunda alarma","iso":"2026-11-26T09:00:00-06:00","txt":"jue 26 de noviembre, 9:00 am","x":"La otra posible apertura, si la ventana es de 14 días. Los slots de atardecer se agotan en minutos.","link":"https://www.shibuya-scramble-square.com/sky/ticket"},{"t":"Check-in del vuelo de ida","iso":"2026-12-07T21:45:00-06:00","txt":"lun 7 de diciembre, 21:45","x":"Abre 24 h antes. Es cuando se liberan los asientos que estaban bloqueados.","link":""},{"t":"Salida de México","iso":"2026-12-08T21:45:00-06:00","txt":"mar 8 de diciembre, 21:45","x":"AM 0058 desde la Terminal 2.","link":""}],"CN":{"tokio":"Tokio","tsukuba":"Tsukuba","nagoya":"Nagoya","kioto":"Kioto","osaka":"Osaka"}};
+const CC = {tokio:"var(--tokio)",tsukuba:"var(--tsukuba)",nagoya:"var(--nagoya)",
+            kioto:"var(--kioto)",osaka:"var(--osaka)"};
+const esc = s => String(s==null?"":s).replace(/[&<>"']/g, c =>
+  ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+
+const ICON_GO = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>';
+const ICON_PIN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>';
+
+function pin(k){const p=D.L[k];if(!p||p.lat==null)return"";
+  return `https://www.google.com/maps/search/?api=1&query=${p.lat}%2C${p.lng}`;}
+function ruta(a,b){if(a===b)return"";const x=D.L[a],y=D.L[b];if(!x||!y||x.lat==null||y.lat==null)return"";
+  if(x.lat===y.lat&&x.lng===y.lng)return"";
+  return `https://www.google.com/maps/dir/?api=1&origin=${x.lat}%2C${x.lng}&destination=${y.lat}%2C${y.lng}&travelmode=transit`;}
+
+// ---------------- relojes
+function tz(d,z){return new Intl.DateTimeFormat("es-MX",{timeZone:z,hour:"2-digit",minute:"2-digit",hour12:false}).format(d);}
+function tick(){const n=new Date();
+  document.getElementById("cmx").textContent=tz(n,"America/Mexico_City");
+  document.getElementById("cjp").textContent=tz(n,"Asia/Tokyo");}
+
+function dias(ms){return Math.floor(ms/864e5);}
+function cuenta(iso){
+  const t=new Date(iso)-new Date();
+  if(t<0)return null;
+  const d=dias(t),h=Math.floor(t/36e5)%24,m=Math.floor(t/6e4)%60;
+  if(d>0)return `faltan ${d} día${d===1?"":"s"}`;
+  if(h>0)return `faltan ${h} h ${m} min`;
+  return `faltan ${m} min`;}
+
+// ---------------- AHORA
+function vAhora(){
+  const n=new Date(), salida=new Date("2026-12-08T21:45:00-06:00");
+  const jp=new Intl.DateTimeFormat("sv-SE",{timeZone:"Asia/Tokyo",year:"numeric",month:"2-digit",day:"2-digit"}).format(n);
+  const hoy=D.D.find(d=>d.iso===jp);
+  let h="";
+  if(hoy){
+    const hm=new Intl.DateTimeFormat("sv-SE",{timeZone:"Asia/Tokyo",hour:"2-digit",minute:"2-digit",hour12:false}).format(n);
+    const ps=D.P.filter(p=>p.d===hoy.n);
+    const act=ps.filter(p=>p.ini<=hm&&(!p.fin||p.fin>hm)).pop();
+    const sig=ps.find(p=>p.ini>hm);
+    h+=`<div class="hero" style="--c:${CC[hoy.ciudad]}">
+      <div class="k">Día ${hoy.n} de 10 · ${esc(hoy.f)}</div>
+      <div class="big">${act?esc(act.t):"Tiempo libre"}</div>
+      <div class="sub">${act?esc(act.h)+" · "+esc(act.x.slice(0,150)):esc(hoy.z)}</div></div>`;
+    if(sig)h+=`<div class="tile"><div class="k">Lo que sigue</div>
+      <div class="v">${esc(sig.ini)} · ${esc(sig.t)}</div>
+      <div class="n">${esc(sig.x.slice(0,180))}</div></div>`;
+  }else if(n<salida){
+    const d=dias(salida-n);
+    h+=`<div class="hero"><div class="k">Cuenta regresiva</div>
+      <div class="big">${d} día${d===1?"":"s"}</div>
+      <div class="sub">Para despegar de la Ciudad de México. AM 0058, martes 8 de diciembre a las 21:45.</div></div>`;
+  }else{
+    h+=`<div class="hero"><div class="k">El viaje</div><div class="big">Terminado</div>
+      <div class="sub">10 al 19 de diciembre de 2026.</div></div>`;
+  }
+  const prox=D.FE.filter(f=>new Date(f.iso)>n).slice(0,3);
+  if(prox.length){
+    h+=`<h2 class="sec">Lo que viene</h2><div class="grid2">`;
+    prox.forEach((f,i)=>{h+=`<div class="tile${i===0?" urge":""}"><div class="k">${esc(f.txt)}</div>
+      <div class="v">${esc(f.t)}</div><div class="n">${esc(f.x)}</div>
+      <div class="cd">${esc(cuenta(f.iso)||"")}</div>
+      ${f.link?`<div class="acts"><a class="go" href="${f.link}" target="_blank" rel="noopener">Abrir ${ICON_GO}</a></div>`:""}
+      </div>`;});
+    h+=`</div>`;
+  }
+  h+=`<h2 class="sec">El viaje de un vistazo</h2><div class="grid2">`;
+  D.D.forEach(d=>{h+=`<div class="tile" style="border-left:3px solid ${CC[d.ciudad]}">
+    <div class="k">Día ${d.n} · ${esc(d.f.split(" de ")[0])}</div>
+    <div class="v">${esc(d.z)}</div><div class="n">${esc(d.r)}</div></div>`;});
+  h+=`</div>`;
+  return h;
+}
+
+// ---------------- DÍAS
+let diaSel=1;
+function vDias(){
+  let h=`<p class="lede">Los horarios son rangos flexibles, no citas. Cada parada trae un botón
+    que abre Google Maps con la ruta desde la parada anterior, en transporte público.</p><div class="days">`;
+  D.D.forEach(d=>{h+=`<button class="dbtn" data-dia="${d.n}" style="--c:${CC[d.ciudad]}"
+    aria-current="${d.n===diaSel}"><span class="n">${d.n}</span><span class="d">${esc(d.f.split(" ")[1])} dic</span></button>`;});
+  h+=`</div><div id="dcont"></div>`;
+  return h;
+}
+function renderDia(){
+  const d=D.D.find(x=>x.n===diaSel), c=CC[d.ciudad];
+  let h=`<div class="dhead" style="--c:${c}"><div class="t">${esc(d.f)}</div>
+    <div class="z">${esc(d.z)}</div><div class="r">${esc(d.r)}</div></div>
+    <div class="rail" style="--c:${c}">`;
+  D.P.filter(p=>p.d===diaSel).forEach(p=>{
+    const key=!!p.act, lug=p.lugar?D.L[p.lugar]:null;
+    h+=`<div class="stop ${key?"key":(lug?"":"plain")}">
+      <div class="time">${esc(p.ini)}${p.fin?`<em>${esc(p.fin)}</em>`:""}</div>
+      <div class="dot"></div><div class="card">
+      <div class="t">${esc(p.t)}</div><div class="x">${esc(p.x)}</div>`;
+    if(p.dur||p.act){h+=`<div class="badges">`;
+      if(p.dur&&p.dur!=="—")h+=`<span class="b">${esc(p.dur)}</span>`;
+      if(p.act){const e=p.act.estado;
+        const cl=e.includes("PAGADO")?"ok":(e==="Gratis"?"":"warn");
+        h+=`<span class="b ${cl}">${esc(e)}</span>`;}
+      h+=`</div>`;}
+    if(lug){
+      h+=`<div class="meta"><div><b>Dónde:</b> ${esc(lug.d)}</div>
+        <div><b>Cómo llegar:</b> ${esc(lug.c)}</div>`;
+      if(p.act&&p.act.reserva)h+=`<div><b>Reserva:</b> ${esc(p.act.reserva)}</div>`;
+      h+=`</div><div class="acts">`;
+      const r=p.desde?ruta(p.desde,p.lugar):"";
+      if(r)h+=`<a class="go p" href="${r}" target="_blank" rel="noopener">${ICON_GO} Cómo llegar${p.desde&&D.L[p.desde]?` <span style="opacity:.75;font-weight:400">desde ${esc(D.L[p.desde].n.split(" (")[0].split(" —")[0])}</span>`:""}</a>`;
+      const pn=pin(p.lugar);
+      if(pn)h+=`<a class="go" href="${pn}" target="_blank" rel="noopener">${ICON_PIN} Ver lugar</a>`;
+      h+=`</div>`;
+    }
+    h+=`</div></div>`;
+  });
+  h+=`</div>`;
+  document.getElementById("dcont").innerHTML=h;
+  document.querySelectorAll(".dbtn").forEach(b=>b.setAttribute("aria-current",String(+b.dataset.dia===diaSel)));
+}
+
+// ---------------- VUELOS
+function vVuelos(){
+  let h=`<p class="lede">Tres vuelos. La ida es directa con una parada técnica; el regreso
+    tiene una escala larga en Seúl. El check-in abre 24 horas antes de cada despegue.</p><div class="fl">`;
+  D.VU.forEach(f=>{
+    h+=`<div class="f"><div class="code">${esc(f.cod)} · ${esc(f.ln)}</div>
+      <div class="route">${esc(f.de)} → ${esc(f.a)}</div>
+      <div class="times"><div class="w">${esc(f.sale)}<em>Salida</em></div>
+      <div class="mid">${esc(f.dur)}<br>✈</div>
+      <div class="w r">${esc(f.llega)}<em>Llegada</em></div></div>
+      <div class="x" style="color:var(--fg2);font-size:13.5px">${esc(f.nota)}</div>
+      <div class="badges"><span class="b">Asiento ${esc(f.asiento)}</span>`;
+    if(f.checkinTxt)h+=`<span class="b acc">Check-in ${esc(f.checkinTxt)}</span>`;
+    h+=`</div></div>`;
+  });
+  h+=`</div><h2 class="sec">Equipaje</h2><div class="items">`;
+  D.EQ.forEach(e=>{h+=`<div class="item"><div class="t">${esc(e.t)}</div>
+    <div class="x" style="color:var(--acc);font-size:12.5px;font-weight:700;margin-top:2px">${esc(e.s)}</div>
+    <div class="x">${esc(e.x)}</div></div>`;});
+  h+=`</div>`;
+  return h;
+}
+
+// ---------------- SEÚL
+function vSeul(){
+  let h=`<div class="hero"><div class="k">Escala en Incheon</div>
+    <div class="big">12 h 35</div>
+    <div class="sub">Llegan cerca de las 23:05 del sábado 19 y salen a las 11:40 del domingo 20.
+      Toda la escala cae de noche, que es la peor ventana para salir a conocer. De esas horas,
+      solo unas 7 son realmente libres.</div></div>
+    <h2 class="sec">Confirmen esto primero</h2><div class="items">
+    <div class="item"><div class="t">¿Las maletas van facturadas hasta México?</div>
+      <div class="x">Si van hasta MEX no las tocan en Seúl y pueden quedarse en zona de tránsito.
+        Si solo llegan a Incheon, tienen que recogerlas, pasar migración y volver a documentar.
+        Eso cambia todo el plan. Se pregunta en el mostrador de Narita.</div></div>
+    <div class="item"><div class="t">¿A qué hora abre el mostrador del AM 0091?</div>
+      <div class="x">Normalmente 3 horas antes, o sea cerca de las 08:40.</div></div>
+    <div class="item"><div class="t">¿Llegan y salen de la misma terminal?</div>
+      <div class="x">Korean Air y Aeroméxico operan los dos desde la T2, así que lo más probable
+        es que no haya que cambiar. El traslado entre terminales son 20 minutos en shuttle.</div></div>
+    </div><h2 class="sec">Las opciones</h2><div class="items">`;
+  D.SE.forEach(o=>{
+    const cl=o.tag==="recomendada"?"rec":(o.tag.startsWith("no")?"no":"");
+    const bc=o.tag==="recomendada"?"ok":(o.tag.startsWith("no")?"":"warn");
+    h+=`<div class="item ${cl}"><div class="badges" style="margin:0 0 7px">
+      <span class="b ${bc}">${esc(o.tag)}</span></div>
+      <div class="t">${esc(o.t)}</div><div class="x">${esc(o.x)}</div><ul>`;
+    o.li.forEach(l=>h+=`<li>${esc(l)}</li>`);
+    h+=`</ul></div>`;
+  });
+  h+=`</div><h2 class="sec">Migración</h2><div class="items">
+    <div class="item"><div class="t">No necesitan visa ni K-ETA</div>
+      <div class="x">Los mexicanos están exentos del K-ETA y pueden entrar a Corea sin visa hasta
+        por 90 días. La exención está prorrogada hasta el 31 de diciembre de 2026, así que el viaje
+        cae dentro, pero por poco: vale reconfirmarlo en noviembre. Si se quedan en zona de tránsito,
+        ni siquiera pasan migración.</div>
+      <div class="acts"><a class="go" href="https://embamex.sre.gob.mx/corea/" target="_blank" rel="noopener">Embajada de México ${ICON_GO}</a></div></div>
+    <div class="item"><div class="t">Qué dejar a la mano</div>
+      <div class="x">Una muda y lo de aseo en la mochila de cabina. Toalla pequeña, porque las duchas
+        del aeropuerto son gratis pero la toalla no la dan. Antifaz y tapones: las zonas de descanso
+        tienen luz toda la noche.</div></div>
+    </div><h2 class="sec">Enlaces</h2><div class="items">`;
+  [["Darakhyu — hotel cápsula","https://www.walkerhill.com/darakhyuicn/en/"],
+   ["Aeropuerto de Incheon","https://www.airport.kr/ap/en/index.do"],
+   ["AREX — tren al aeropuerto","https://www.arex.or.kr/main.do"]].forEach(([n,u])=>{
+    h+=`<div class="item"><div class="t">${esc(n)}</div>
+      <div class="acts"><a class="go" href="${u}" target="_blank" rel="noopener">Abrir ${ICON_GO}</a></div></div>`;});
+  h+=`</div>`;
+  return h;
+}
+
+// ---------------- RESERVAS
+function vReservas(){
+  const n=new Date();
+  let h=`<p class="lede">Lo que ya está cerrado y lo que falta, con sus fechas límite.</p>
+    <h2 class="sec">Fechas con alarma</h2><div class="grid2">`;
+  D.FE.forEach(f=>{const c=cuenta(f.iso);
+    h+=`<div class="tile${c&&new Date(f.iso)-n<15*864e5?" urge":""}">
+      <div class="k">${esc(f.txt)}</div><div class="v">${esc(f.t)}</div>
+      <div class="n">${esc(f.x)}</div>
+      <div class="cd">${c?esc(c):"ya pasó"}</div></div>`;});
+  h+=`</div>`;
+  const grupos=[["URGENTE","Urgente"],["EN ESPERA","En espera"],["PENDIENTE","Pendiente"],
+                ["VERIFICAR","Por verificar"],["LISTO","Ya está listo"],["NO APLICA","No aplica"]];
+  grupos.forEach(([k,nom])=>{
+    const rs=D.R.filter(r=>r.p===k);
+    if(!rs.length)return;
+    h+=`<h2 class="sec">${esc(nom)}</h2><div class="items">`;
+    rs.forEach(r=>{
+      const cl=k==="LISTO"?"rec":(k==="NO APLICA"?"no":"");
+      const bc=k==="LISTO"?"ok":(k==="URGENTE"?"acc":"warn");
+      h+=`<div class="item ${cl}"><div class="badges" style="margin:0 0 7px">
+        <span class="b ${bc}">${esc(r.e)}</span></div>
+        <div class="t">${esc(r.q)}</div><div class="x">${esc(r.c)}</div>
+        <div class="x" style="font-size:12.5px;color:var(--fg3)">${esc(r.dd)}</div>`;
+      if(r.link)h+=`<div class="acts"><a class="go" href="${r.link}" target="_blank" rel="noopener">Abrir ${ICON_GO}</a></div>`;
+      h+=`</div>`;});
+    h+=`</div>`;});
+  return h;
+}
+
+// ---------------- GUÍA
+function vGuia(){
+  let h=`<p class="lede">Lo que conviene saber antes de subirse al avión y mientras estén allá.</p>
+    <h2 class="sec">Notas prácticas</h2><div class="items">`;
+  D.N.forEach(n=>h+=`<div class="item"><div class="t">${esc(n.t)}</div><div class="x">${esc(n.x)}</div></div>`);
+  h+=`</div><h2 class="sec">Frases que sirven todo el viaje</h2><div class="fr">`;
+  D.F.forEach(f=>h+=`<div class="frase"><b>${esc(f.j)}</b><span class="p">${esc(f.p)}</span>
+    <span class="e">${esc(f.e)}</span></div>`);
+  h+=`</div><h2 class="sec">Glosario</h2><div class="glos">`;
+  D.G.forEach(g=>h+=`<div class="gl"><b>${esc(g.t)}</b><span>${esc(g.x)}</span></div>`);
+  h+=`</div>`;
+  return h;
+}
+
+// ---------------- router
+const VISTAS=[["ahora","Ahora",vAhora],["dias","Días",vDias],["vuelos","Vuelos",vVuelos],
+              ["seul","Seúl",vSeul],["reservas","Reservas",vReservas],["guia","Guía",vGuia]];
+let actual="ahora";
+function ir(k,push){
+  if(!VISTAS.some(v=>v[0]===k))k="ahora";
+  actual=k;
+  VISTAS.forEach(([id,,fn])=>{
+    const el=document.getElementById("v-"+id);
+    if(id===k){el.innerHTML=fn();el.hidden=false;}else{el.hidden=true;}
+  });
+  if(k==="dias")renderDia();
+  document.querySelectorAll("#nav button").forEach(b=>b.setAttribute("aria-current",String(b.dataset.v===k)));
+  if(push&&location.hash!=="#"+k)location.hash=k;
+  window.scrollTo({top:0,behavior:"instant"});
+}
+document.getElementById("nav").innerHTML=VISTAS.map(([id,nom])=>
+  `<button data-v="${id}">${nom}</button>`).join("");
+document.getElementById("nav").addEventListener("click",e=>{
+  const b=e.target.closest("button[data-v]"); if(b)ir(b.dataset.v,true);});
+document.addEventListener("click",e=>{
+  const b=e.target.closest(".dbtn");
+  if(b){diaSel=+b.dataset.dia;renderDia();
+    try{localStorage.setItem("jp-dia",String(diaSel));}catch(_){}}
+});
+window.addEventListener("hashchange",()=>ir(location.hash.slice(1),false));
+try{const s=localStorage.getItem("jp-dia"); if(s)diaSel=Math.min(10,Math.max(1,+s));}catch(_){}
+tick(); setInterval(tick,1000);
+setInterval(()=>{if(actual==="ahora"||actual==="reservas")ir(actual,false);},60000);
+ir(location.hash?location.hash.slice(1):"ahora",false);
+</script>
