@@ -1,5 +1,7 @@
-const CACHE = "japon-9888e8cf4d";
-const CORE = ["./","./index.html","./icon-180.png","./icon-512.png","./manifest.json"];
+const CACHE = "japon-e9eaabbfc0";
+const CORE = ["./","./index.html","./manifest.json",
+  "./fuentes/zenkaku-400.woff2","./fuentes/zenkaku-500.woff2","./fuentes/zenkaku-700.woff2",
+  "./fuentes/zenmincho-400.woff2","./fuentes/zenmincho-500.woff2"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(CORE)).then(() => self.skipWaiting()));
@@ -16,7 +18,20 @@ self.addEventListener("fetch", e => {
   if (req.method !== "GET") return;
   const mismoOrigen = new URL(req.url).origin === location.origin;
 
-  // La página y sus archivos: red primero, caché solo si no hay conexión.
+  // Fuentes, fotos e iconos no cambian nunca: caché primero, sin tocar la red.
+  const estatico = /\.(woff2|jpg|png|svg|webp)$/.test(new URL(req.url).pathname);
+  if (estatico) {
+    e.respondWith(
+      caches.match(req).then(r => r || fetch(req).then(res => {
+        const copia = res.clone();
+        caches.open(CACHE).then(c => c.put(req, copia)).catch(() => {});
+        return res;
+      }))
+    );
+    return;
+  }
+
+  // La página: red primero, para que las actualizaciones lleguen solas.
   if (req.mode === "navigate" || mismoOrigen) {
     e.respondWith(
       fetch(req).then(res => {
@@ -28,7 +43,7 @@ self.addEventListener("fetch", e => {
     return;
   }
 
-  // Tipografías y recursos externos: caché primero, para que funcione sin internet.
+  // Cualquier otra cosa: caché primero.
   e.respondWith(
     caches.match(req).then(r => r || fetch(req).then(res => {
       const copia = res.clone();
