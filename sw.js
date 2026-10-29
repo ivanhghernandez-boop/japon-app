@@ -1,4 +1,4 @@
-const CACHE = "japon-e9eaabbfc0";
+const CACHE = "japon-70143798b2";
 const CORE = ["./","./index.html","./manifest.json",
   "./fuentes/zenkaku-400.woff2","./fuentes/zenkaku-500.woff2","./fuentes/zenkaku-700.woff2",
   "./fuentes/zenmincho-400.woff2","./fuentes/zenmincho-500.woff2"];
