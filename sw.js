@@ -1,4 +1,4 @@
-const CACHE = "japon-da9b0ad59c";
+const CACHE = "japon-f28db1563a";
 const CORE = ["./","./index.html","./icon-180.png","./icon-512.png","./manifest.json"];
 
 self.addEventListener("install", e => {
