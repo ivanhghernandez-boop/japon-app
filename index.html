@@ -269,6 +269,21 @@ h2.sec::after{content:"";flex:1;height:1px;background:var(--line)}
 .mas[open]>summary::after{transform:rotate(45deg) translate(-1px,-1px)}
 .mas .meta{border-top:none;padding-top:9px;margin-top:0}
 
+/* ---------- hoy: disponible sin internet */
+.off{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);
+  padding:17px 18px 18px}
+.off.ok{border-color:color-mix(in srgb,var(--ok) 45%,transparent);
+  background:color-mix(in srgb,var(--ok) 7%,transparent)}
+.off .t{font-weight:500;font-size:16px;line-height:1.4;display:flex;align-items:center;gap:9px}
+.off .t i{width:9px;height:9px;border-radius:50%;background:var(--fg3);flex:0 0 auto}
+.off.ok .t i{background:var(--ok)}
+.off .n{color:var(--fg2);font-size:14px;line-height:1.65;margin-top:7px;max-width:56ch}
+.off .acts{margin-top:14px}
+.off .barra{height:5px;border-radius:99px;background:var(--surface2);overflow:hidden;
+  margin-top:13px;display:none}
+.off .barra b{display:block;height:100%;width:0;background:var(--ok);border-radius:99px;
+  transition:width .25s}
+
 /* ---------- hoy: lo que pasa ahora */
 .now{border-bottom:1px solid var(--line);padding-bottom:27px;margin-bottom:2px}
 .now .k{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--alert);
@@ -628,7 +643,11 @@ function vAhora(){
     <div class="sos"><div class="k">Ayuda rápida</div>
       <div class="t">Perdido, sin tren, sin batería o sin saldo</div>
       <div class="acts"><button class="go" data-v2="ayuda">Abrir ayuda ${ICON_GO}</button></div></div>`;
-  h+=`<details class="vistazo"><summary>Los 10 días de un vistazo</summary><div class="grid2">`;
+  h+=`<h2 class="sec">Para usarla sin internet</h2>
+    <div class="off" id="off"><div class="t"><i></i><span id="off-t">Comprobando…</span></div>
+      <div class="n" id="off-n"></div><div class="barra"><b id="off-b"></b></div>
+      <div class="acts" id="off-a"></div></div>`;
+  h+=`<details class="plg"><summary>Los 10 días de un vistazo</summary><div class="grid2">`;
   D.D.forEach(d=>{h+=`<div class="tile" style="border-left:3px solid ${CC[d.ciudad]}">
     <div class="k">Día ${d.n} · ${esc(d.f.split(" de ")[0])}</div>
     <div class="v">${esc(d.z)}</div><div class="n">${esc(d.r)}</div></div>`;});
@@ -854,6 +873,63 @@ function vGuia(){
   return h;
 }
 
+// ---------------- guardar la app para usarla sin señal
+function recursos(){
+  const u=new Set(["./","./index.html","./manifest.json","./icon-180.png","./icon-512.png",
+    "./fuentes/zenkaku-400.woff2","./fuentes/zenkaku-500.woff2","./fuentes/zenkaku-700.woff2",
+    "./fuentes/zenmincho-400.woff2","./fuentes/zenmincho-500.woff2"]);
+  Object.values(D.L).forEach(l=>{if(l.foto)u.add("./"+l.foto);});
+  return [...u];
+}
+async function yaGuardadas(urls){
+  if(!("caches" in window))return -1;
+  try{let n=0; for(const u of urls){ if(await caches.match(u))n++; } return n;}
+  catch(_){return -1;}
+}
+let guardando=false;
+async function pintarOffline(){
+  const caja=document.getElementById("off"); if(!caja)return;
+  const T=document.getElementById("off-t"), N=document.getElementById("off-n"),
+        A=document.getElementById("off-a"), B=document.getElementById("off-b");
+  if(!("serviceWorker" in navigator)||!("caches" in window)){
+    T.textContent="Aquí no se puede guardar";
+    N.textContent="Esta versión no guarda nada para después. Abre la dirección de la web en el navegador del teléfono y agrégala a la pantalla de inicio: ahí sí funciona sin señal.";
+    A.innerHTML=""; return;
+  }
+  const urls=recursos(), hay=await yaGuardadas(urls), total=urls.length;
+  if(hay>=total){
+    caja.classList.add("ok");
+    T.textContent="Lista para usarse sin internet";
+    N.textContent=`Las ${total} piezas están guardadas en el teléfono: el itinerario, las fotos y la tipografía. Abre sin señal y sin datos.`;
+    A.innerHTML=`<button class="go" id="off-rehacer">Volver a guardar</button>`;
+  }else{
+    caja.classList.remove("ok");
+    T.textContent = hay>0 ? `Guardada a medias · ${hay} de ${total}` : "Todavía no está guardada";
+    N.textContent="Tócalo mientras tengas wifi y queda guardada completa. Después abre al instante aunque no haya señal, que es lo que vas a necesitar en el metro y dentro de los templos.";
+    A.innerHTML=`<button class="go p" id="off-guardar">Guardar todo para el viaje</button>`;
+  }
+  caja.querySelector(".barra").style.display="none";
+  B.style.width="0";
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest("#off-guardar,#off-rehacer"); if(!b||guardando)return;
+  const sw=navigator.serviceWorker&&navigator.serviceWorker.controller;
+  if(!sw){ document.getElementById("off-n").textContent=
+    "Falta un momento para que el navegador termine de preparar la app. Recarga la página e inténtalo otra vez."; return; }
+  guardando=true;
+  const urls=recursos();
+  document.getElementById("off").querySelector(".barra").style.display="block";
+  b.textContent="Guardando…"; b.classList.add("p");
+  sw.postMessage({tipo:"guardar", urls});
+});
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.addEventListener("message",ev=>{
+    const d=ev.data||{}; if(d.tipo!=="avance"&&d.tipo!=="listo")return;
+    const B=document.getElementById("off-b"); if(B)B.style.width=Math.round((d.hechas+d.fallos)/d.total*100)+"%";
+    if(d.tipo==="listo"){ guardando=false; setTimeout(pintarOffline,500); }
+  });
+}
+
 // ---------------- tarjeta en japonés
 function verJP(k){
   const p=D.L[k]; if(!p||!p.jp)return;
@@ -1025,6 +1101,7 @@ function ir(k,push){
   });
   if(k==="dias")renderDia();
   if(k==="yenes")conv();
+  if(k==="ahora")pintarOffline();
   let act=null;
   document.querySelectorAll("#tabbar .tab").forEach(b=>{
     const on=b.dataset.v===k; b.setAttribute("aria-current",String(on)); if(on)act=b;
