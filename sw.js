@@ -1,4 +1,4 @@
-const CACHE = "japon-04e863360b";
+const CACHE = "japon-e9e9b8ca7c";
 const GUARDADO = "japon-offline";          // no se borra al actualizar
 const CORE = ["./","./index.html","./manifest.json",
   "./fuentes/zenkaku-400.woff2","./fuentes/zenkaku-500.woff2","./fuentes/zenkaku-700.woff2",
