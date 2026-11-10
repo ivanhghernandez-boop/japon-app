@@ -102,6 +102,8 @@ header{position:sticky;top:env(safe-area-inset-top,0px);z-index:30;background:va
 .clocks b s{text-decoration:none;font-size:10px;font-weight:400;color:var(--fg3);margin-left:3px}
 .clocks i{font-style:normal;font-size:9px;letter-spacing:.18em;text-transform:uppercase;
   color:var(--fg3);display:block;margin-bottom:1px}
+.clocks u{text-decoration:none;display:block;font-size:10.5px;font-weight:400;
+  color:var(--fg3);font-variant-numeric:tabular-nums;letter-spacing:.015em;margin-top:2px}
 
 main{padding-block:26px;padding-bottom:calc(var(--nav) + env(safe-area-inset-bottom,0px) + 28px)}
 section[hidden]{display:none!important}
@@ -495,8 +497,8 @@ footer{border-top:1px solid var(--line);margin-top:46px;padding-block:22px 6px;
 <header><div class="wrap hdr">
   <div class="brand"><i></i>JAPÓN</div>
   <div class="clocks">
-    <div><i>México</i><b id="cmx">--:--<s>am</s></b></div>
-    <div><i>Japón</i><b id="cjp">--:--<s>pm</s></b></div>
+    <div><i>México</i><b id="cmx">--:--<s>am</s></b><u id="dmx">&nbsp;</u></div>
+    <div><i>Japón</i><b id="cjp">--:--<s>pm</s></b><u id="djp">&nbsp;</u></div>
   </div>
 </div></header>
 
@@ -538,10 +540,17 @@ function tz(d,z){
     .formatToParts(d);
   const g=t=>(p.find(x=>x.type===t)||{}).value||"";
   return {h:g("hour")+":"+g("minute"), s:g("dayPeriod").toLowerCase()};}
+function fechaCorta(d,z){
+  const p=new Intl.DateTimeFormat("es-MX",{timeZone:z,weekday:"short",day:"numeric"})
+    .formatToParts(d);
+  const g=t=>(p.find(x=>x.type===t)||{}).value||"";
+  return g("weekday").replace(/\.$/,"")+" "+g("day");}
 function tick(){const n=new Date();
-  for(const [id,z] of [["cmx","America/Mexico_City"],["cjp","Asia/Tokyo"]]){
+  for(const [id,did,z] of [["cmx","dmx","America/Mexico_City"],
+                           ["cjp","djp","Asia/Tokyo"]]){
     const t=tz(n,z), el=document.getElementById(id);
     el.innerHTML=esc(t.h)+'<s>'+esc(t.s)+'</s>';
+    document.getElementById(did).textContent=fechaCorta(n,z);
   }}
 
 function dias(ms){return Math.floor(ms/864e5);}
